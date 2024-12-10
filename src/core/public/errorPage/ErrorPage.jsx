@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import errorPageImg from "../../../../public/BG/ErrorPage.png";
+import errorPageImg from "/BG/ErrorPage.png";
 
 const ErrorPage = () => {
   return (

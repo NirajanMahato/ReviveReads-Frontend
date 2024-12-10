@@ -17,23 +17,23 @@ body {
 
 @font-face {
   font-family: Gilroy Light;
-  src: url("../public/Fonts/Gilroy-Light.ttf") format('truetype');
+  src: url("/Fonts/Gilroy-Light.ttf") format('truetype');
 }
 @font-face {
   font-family: Gilroy Regular;
-  src: url("../public/Fonts/Gilroy-Regular.ttf") format('truetype');
+  src: url("/Fonts/Gilroy-Regular.ttf") format('truetype');
 }
 @font-face {
   font-family: Gilroy Medium;
-  src: url("../public/Fonts/Gilroy-Medium.ttf") format('truetype');
+  src: url("/Fonts/Gilroy-Medium.ttf") format('truetype');
 }
 @font-face {
   font-family: Gilroy Bold;
-  src: url("../public/Fonts/Gilroy-Bold.ttf") format('truetype');
+  src: url("/Fonts/Gilroy-Bold.ttf") format('truetype');
 }
 @font-face {
   font-family: Gilroy SemiBold;
-  src: url("../public/Fonts/Gilroy-SemiBold.ttf") format('truetype');
+  src: url("/Fonts/Gilroy-SemiBold.ttf") format('truetype');
 }
 
 .black-to-white {
