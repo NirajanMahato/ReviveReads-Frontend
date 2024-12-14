@@ -1,12 +1,11 @@
 import React, { useState } from "react";
+import { FaLocationDot } from "react-icons/fa6";
 import { GoClockFill } from "react-icons/go";
 import { MdLocalShipping, MdOutlineBookmarkAdd } from "react-icons/md";
 import { RiMessage3Line } from "react-icons/ri";
 import Navbar from "../../../components/Navbar";
-import { FaLocationDot } from "react-icons/fa6";
 
 const ProductDetails = () => {
-
   const [activeTab, setActiveTab] = useState("description");
 
   return (
@@ -128,19 +127,6 @@ const ProductDetails = () => {
             </span>
           </div>
 
-          {/* <div className="mt-4">
-            <h2 className="text-xl font-gilroySemiBold text-gray-900">
-              Description
-            </h2>
-            <p className="text-sm text-gray-600 lg:pr-12">
-              First edition, first printing of F. Scott Fitzgerald's
-              masterpiece. Book is in very good condition with minimal wear to
-              the corners and spine. Original dust jacket is not present. Pages
-              are clean with no markings or annotations. A beautiful copy of
-              this classic American novel.
-            </p>
-          </div> */}
-
           <div className="flex border-b mt-4 mb-4">
             <button
               onClick={() => setActiveTab("description")}
@@ -166,7 +152,6 @@ const ProductDetails = () => {
 
           {activeTab === "description" && (
             <div className="p-4 rounded-lg border border-gray-200">
-            
               <p className="text-sm text-gray-600">
                 First edition, first printing of F. Scott Fitzgerald's
                 masterpiece. Book is in very good condition with minimal wear to
@@ -178,20 +163,21 @@ const ProductDetails = () => {
           )}
 
           {activeTab === "location" && (
-            <div class="p-6 rounded-lg border border-gray-200">
-            <div class="relative h-48 rounded-lg overflow-hidden">
-                <img src="https://ai-public.creatie.ai/gen_page/map_placeholder_1280x720.png" alt="Location Map" class="absolute inset-0 w-full h-full object-cover" />
-                <div class="absolute inset-0 bg-black bg-opacity-10"></div>
-                <div class="absolute flex items-center bottom-4 left-4 bg-white px-3 py-1 rounded-full text-sm">
-                  <FaLocationDot className="mr-1"/>
-                    Kathmandu, Nepal (2.5 KM away)
+            <div className="p-6 rounded-lg border border-gray-200">
+              <div className="relative h-48 rounded-lg overflow-hidden">
+                <img
+                  src="https://ai-public.creatie.ai/gen_page/map_placeholder_1280x720.png"
+                  alt="Location Map"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-10"></div>
+                <div className="absolute flex items-center bottom-4 left-4 bg-white px-3 py-1 rounded-full text-sm">
+                  <FaLocationDot className="mr-1" />
+                  Kathmandu, Nepal (2.5 KM away)
                 </div>
+              </div>
             </div>
-        </div>
           )}
-
-
-          
         </div>
       </div>
     </>
