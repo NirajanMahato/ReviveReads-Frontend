@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import ProductDetails from "./core/public/productDetails/ProductDetails";
 
 /// Eager loading and lazy loading
 // import Home from "./core/public/homePage/Home";
@@ -28,6 +29,7 @@ function App(){
 
   const publicRoutes = [{path: "/", element: (<Suspense> <Home/> </Suspense>),errorElement: <>Error</>},
                         {path: "/Login", element: (<Suspense> <LoginPage/> </Suspense>),errorElement: <>Error</>},
+                        {path: "/ProductDetails", element: (<Suspense> <ProductDetails/> </Suspense>),errorElement: <>Error</>},
                         {path: "/Error", element: (<Suspense> <ErrorPage/> </Suspense>),errorElement: <>Error</>},
   ];
   
