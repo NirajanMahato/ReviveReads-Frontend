@@ -11,39 +11,39 @@ const ProductDetails = () => {
   return (
     <>
       <Navbar />
-      <div className="flex md:px-8 px-6 lg:mt-3 md:mt-3 mt-10 pb-6">
-        <div className="w-1/3">
-          <div className="flex justify-center rounded-lg  py-8">
+      <div className="flex lg:flex-row flex-col lg:items-start md:items-center md:px-8 px-6 lg:mt-3 md:mt-3 pb-6">
+        <div className="lg:w-1/3 md:w-1/2">
+          <div className="flex justify-center rounded-lg pt-4 md:pb-8 pb-4">
             <img
               src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcStgMdaLms8GEoheBM4iutawr2UqbOOwu9z2RVLOrhqC2UZJsAn"
               alt="book"
-              className="rounded-lg object-cover w-80 h-96"
+              className="rounded-lg object-cover md:w-80 w-44 md:h-96 h-56"
             />
           </div>
-          <div className="flex justify-start gap-3 pl-10">
+          <div className="flex justify-start gap-3 md:pl-10 pl-16">
             <img
               src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcStgMdaLms8GEoheBM4iutawr2UqbOOwu9z2RVLOrhqC2UZJsAn"
               alt="book"
-              className="rounded-lg object-cover w-16 h-16"
+              className="rounded-lg object-cover md:w-16 w-10 md:h-16 h-10"
             />
             <img
               src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcStgMdaLms8GEoheBM4iutawr2UqbOOwu9z2RVLOrhqC2UZJsAn"
               alt="book"
-              className="rounded-lg object-cover w-16 h-16"
+              className="rounded-lg object-cover md:w-16 w-10 md:h-16 h-10"
             />
             <img
               src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcStgMdaLms8GEoheBM4iutawr2UqbOOwu9z2RVLOrhqC2UZJsAn"
               alt="book"
-              className="rounded-lg object-cover w-16 h-16"
+              className="rounded-lg object-cover md:w-16 w-10 md:h-16 h-10"
             />
           </div>
         </div>
-        <div className="w-2/3 pl-8 pr-2">
+        <div className="lg:w-2/3 w-full lg:pl-8 lg:pr-2 lg:mt-0 mt-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              The Great Gatsby (First Edition)
+            <h1 className="lg:text-3xl md:text-2xl text-xl font-ppMori text-gray-900">
+              Elon Musk: ( Tesla, SpaceX )
             </h1>
-            <h1 className="text-xl font-gilroyMedium text-gray-500 mt-1 pl-1">
+            <h1 className="md:text-xl font-gilroyMedium text-gray-500 mt-1 pl-1">
               रू. 200
             </h1>
           </div>
@@ -56,8 +56,8 @@ const ProductDetails = () => {
                 alt="Seller profile"
               />
               <div>
-                <h3 className="text-sm font-medium text-gray-900">
-                  Sold by <b>Nirajan Mahato</b>
+                <h3 className="text-sm text-gray-900">
+                  Sold by <b className="font-ppMori">Nirajan Mahato</b>
                 </h3>
 
                 <p className="text-xs text-gray-500">
@@ -71,7 +71,7 @@ const ProductDetails = () => {
             <h2 className="text-xl font-gilroySemiBold text-gray-900">
               Book Details
             </h2>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-3 font-gilroyMedium mt-1">
+            <div className="grid grid-cols-2 md:gap-x-4 gap-x-0 gap-y-3 font-gilroyMedium mt-1">
               <div>
                 <p className="text-sm text-gray-500">Condition</p>
                 <p className="text-sm font-medium text-gray-900">Very Good</p>
@@ -163,8 +163,8 @@ const ProductDetails = () => {
           )}
 
           {activeTab === "location" && (
-            <div className="p-6 rounded-lg border border-gray-200">
-              <div className="relative h-48 rounded-lg overflow-hidden">
+            <div className="md:p-6 rounded-lg border border-gray-200">
+              <div className="relative md:h-48 h-28 rounded-lg overflow-hidden">
                 <img
                   src="https://ai-public.creatie.ai/gen_page/map_placeholder_1280x720.png"
                   alt="Location Map"

@@ -35,6 +35,10 @@ body {
   font-family: Gilroy SemiBold;
   src: url("/Fonts/Gilroy-SemiBold.ttf") format('truetype');
 }
+@font-face {
+  font-family: PP mori;
+  src: url("/Fonts/PPMori-SemiBold.otf") format('truetype');
+}
 
 .black-to-white {
   filter: invert(100%) brightness(100%);

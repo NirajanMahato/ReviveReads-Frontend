@@ -5,7 +5,7 @@ const HeroSection = () => {
     <>
       <div className="md:px-8 px-6 pt-8 flex">
         <div className="md:w-2/5 lg:mt-14 md:mt-3 md:ml-4">
-          <h1 className="font-[900] lg:text-6xl md:text-4xl text-3xl leading-[1.2] tracking-wide">
+          <h1 className="font-[900] font-ppMori lg:text-6xl md:text-4xl text-3xl leading-[1.2] tracking-wide">
             Find Your Next Read Here!
           </h1>
           <div className="flex md:gap-4 gap-2 md:mt-6 mt-3">
