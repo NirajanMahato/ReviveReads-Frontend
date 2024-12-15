@@ -46,14 +46,16 @@ const BottomNavBar = () => {
           <RiMessage3Line className="text-2xl" />
         </button>
 
-        <button
-          className={`flex flex-col items-center ${
-            active === "profile" ? "text-black" : ""
-          }`}
-          onClick={() => handleClick("profile")}
-        >
-          <IoPersonCircleOutline className="text-2xl" />
-        </button>
+        <Link to={"/Login"}>
+          <button
+            className={`flex flex-col items-center ${
+              active === "profile" ? "text-black" : ""
+            }`}
+            onClick={() => handleClick("profile")}
+          >
+            <IoPersonCircleOutline className="text-2xl" />
+          </button>
+        </Link>
       </div>
     </div>
   );

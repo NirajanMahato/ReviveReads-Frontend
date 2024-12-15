@@ -19,7 +19,7 @@ const LoginPage = () =>{
                         <img src={logo2} alt="Logo" className="cursor-pointer md:w-44 w-28"/>
                     </h1>
                     <form className={" flex justify-center items-center flex-col md:mt-14 mt-20"}>
-                        <h1 className={"text-2xl md:text-3xl font-bold mb-1 flex"}>Welcome to ReviveReads</h1>
+                        <h1 className={"text-2xl md:text-3xl font-ppMori mb-1 flex"}>Welcome to ReviveReads</h1>
                         <h3>Please enter your credentials.</h3>
                         <div className={"md:w-6/12 w-11/12 h-12 border-solid border rounded-3xl border-gray-300 mt-14 flex items-center pl-4 pr-2"}>
                             <MdEmail style={{fontSize:"1.4rem",marginRight:"0.5rem",color:"gray"}}/>

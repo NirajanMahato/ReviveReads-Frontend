@@ -11,7 +11,7 @@ const ProductDetails = () => {
   return (
     <>
       <Navbar />
-      <div className="flex lg:flex-row flex-col lg:items-start md:items-center md:px-8 px-6 lg:mt-3 md:mt-3 pb-6">
+      <div className="flex lg:flex-row flex-col lg:items-start md:items-center md:px-8 px-5 lg:mt-3 md:mt-3 pb-6">
         <div className="lg:w-1/3 md:w-1/2">
           <div className="flex justify-center rounded-lg pt-4 md:pb-8 pb-4">
             <img
