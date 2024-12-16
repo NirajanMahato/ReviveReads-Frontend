@@ -5,19 +5,21 @@ const Footer = () => {
     <>
       <div
         className={
-          "w-full md:h-52 h-0 text-white flex items-center justify-end md:px-10 px-3"
+          "w-full md:h-52 h-0 text-gray-900 flex items-center justify-end md:px-10 px-3"
         }
-        style={{ backgroundColor: "#222222" }}
+        style={{
+          background: "linear-gradient(to bottom,  #ffffff, #969696)",
+        }}
       >
         <div className="">
           <h1 className="lg:text-base font-gilroySemiBold">CONTACTS</h1>
-          <h2 className="lg:text-sm text-xs text-gray-200 mt-1">
+          <h2 className="lg:text-sm text-xs text-gray-600 mt-1">
             +977 9820002202 <br />
             Dellibazar, Kathmandu
           </h2>
 
           <h1 className="font-gilroySemiBold lg:mt-6 mt-2">INQUIRES</h1>
-          <h2 className="lg:text-sm text-xs text-gray-200">
+          <h2 className="lg:text-sm text-xs text-gray-600">
             revive-reads@gmail.com
           </h2>
         </div>
