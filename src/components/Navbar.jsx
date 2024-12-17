@@ -1,47 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { LuSearch } from "react-icons/lu";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import UserMenu from "./UserMenu";
 import logo1 from "/Logos/Logo1.png";
 import logo2 from "/Logos/Logo2.png";
 import { products } from "/src/dummyData/dummyBooks";
-import axios from "axios";
-import UserMenu from "./UserMenu";
+import { UserContext } from "../context/UserContext";
 
 const Navbar = () => {
   const [search, setSearch] = useState("");
   const [isSearchBoxVisible, setIsSearchBoxVisible] = useState(false);
-  const [userInfo, setUserInfo] = useState(""); // State to hold user info
-
-  // Access authentication state from Redux store
-  const { isAuthenticated } = useSelector((state) => state.auth);
-  const authenticateToken = localStorage.getItem("token");
-
-  // Fetch user info from backend if authenticated
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      const userId = localStorage.getItem("id"); // Get user ID from localStorage
-      if (userId && authenticateToken) { // Ensure both userId and token exist
-        try {
-          const response = await axios.get("http://localhost:5000/user/get-user-info", {
-            headers: {
-              id: userId, // Send userId in the headers
-              Authorization: `Bearer ${authenticateToken}`, // Send token in the headers
-            },
-          });
-          console.log("User data:", response.data);
-          setUserInfo(response.data); // Set user info to state
-        } catch (error) {
-          console.error("Error fetching user info:", error);
-        }
-      }
-    };
   
-    if (isAuthenticated) {
-      fetchUserInfo(); // Fetch user info when logged in
-    }
-  }, [isAuthenticated]);
+  // Access user info from context
+  const { userInfo, loading } = useContext(UserContext);
 
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
@@ -88,7 +59,7 @@ const Navbar = () => {
               />
               <span
                 className={
-                  "animate-pulse search-span text-xl text-gray-600 cursor-pointer"
+                  "animate-pulse text-xl text-gray-600 cursor-pointer"
                 }
               >
                 <LuSearch />
@@ -102,7 +73,7 @@ const Navbar = () => {
             <span className="border-l-2 border-gray-400 rounded-full h-7 ml-2"></span>
 
             {/* Conditionally render Sign Up or User Info */}
-            <UserMenu userInfo={userInfo} />
+            {!loading && <UserMenu userInfo={userInfo} />}
           </div>
         </div>
       </div>

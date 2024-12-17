@@ -14,7 +14,7 @@ const RecommendSection = () => {
           {products.map((product) => (
             <div
               key={product.id}
-              className="product-div flex items-center gap-x-2 lg:w-96 border rounded-lg p-3 shadow-sm hover:bg-blue-50 hover:bg-opacity-50 hover:border-gray-300 transition-all delay-75"
+              className="product-div flex items-center gap-x-2 lg:w-96 border rounded-lg p-3 hover:shadow-lg hover:bg-blue-50 hover:bg-opacity-50 hover:border-gray-300 transition-all delay-75"
             >
               <Link to={"/ProductDetails"} className="image-div">
                 <img

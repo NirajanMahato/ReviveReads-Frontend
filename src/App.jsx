@@ -1,9 +1,12 @@
+import { Loader } from "lucide-react";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { authActions } from "./store/auth";
-import { Loader } from "lucide-react";
 import LoadingScreen from "./components/LoadingScreen";
+import { UserProvider } from "./context/UserContext";
+import EditProfile from "./core/public/userProfile/EditProfile";
+import UserProfile from "./core/public/userProfile/UserProfile";
+import { authActions } from "./store/auth";
 
 // Lazy-loaded components
 const Home = lazy(() => import("./core/public/homePage/Home"));
@@ -41,29 +44,33 @@ function App() {
 
   return (
     <Suspense fallback={<LoadingScreen/>}>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}/>
-        <Route path="/signup" element={isAuthenticated ? <Navigate to="/" /> : <RegisterPage />}/>
-        <Route path="/productdetails" element={<ProductDetails />} />
-        <Route path="/error" element={<ErrorPage />} />
-        <Route path="/loader" element={<Loader />} />
+      <UserProvider>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}/>
+          <Route path="/signup" element={isAuthenticated ? <Navigate to="/" /> : <RegisterPage />}/>
+          <Route path="/Profile" element={<UserProfile />} />
+          <Route path="/EditProfile" element={<EditProfile />} />
+          <Route path="/productdetails" element={<ProductDetails />} />
+          <Route path="/error" element={<ErrorPage />} />
+          <Route path="/loader" element={<Loader />} />
 
-        {/* Private Routes - Only accessible if authenticated and role is 'admin' */}
-        {isAuthenticated && role === "admin" ? (
-          <Route path="/admin" element={<Layout />}>
-            <Route index element={<Navigate to="dashboard" />} />
-            <Route path="dashboard" element={<DashboardIndex />} />
-            <Route path="user" element={<UserIndex />} />
-          </Route>
-        ) : (
-          <Route path="/admin/*" element={<Navigate to="/login" />} />
-        )}
+          {/* Private Routes - Only accessible if authenticated and role is 'admin' */}
+          {isAuthenticated && role === "admin" ? (
+            <Route path="/admin" element={<Layout />}>
+              <Route index element={<Navigate to="dashboard" />} />
+              <Route path="dashboard" element={<DashboardIndex />} />
+              <Route path="user" element={<UserIndex />} />
+            </Route>
+          ) : (
+            <Route path="/admin/*" element={<Navigate to="/login" />} />
+          )}
 
-        {/* Catch-All Route for 404 Errors */}
-        <Route path="*" element={<ErrorPage />} />
-      </Routes>
+          {/* Catch-All Route for 404 Errors */}
+          <Route path="*" element={<ErrorPage />} />
+        </Routes>
+      </UserProvider>
     </Suspense>
   );
 }

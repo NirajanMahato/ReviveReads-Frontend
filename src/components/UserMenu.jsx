@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { authActions } from "../store/auth";
+import { MdLogout } from "react-icons/md";
+import { RiAccountCircleLine } from "react-icons/ri";
 
 const UserMenu = ({ userInfo }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -66,20 +68,22 @@ const UserMenu = ({ userInfo }) => {
       {/* Dropdown Menu */}
       {showMenu && (
         <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-          <div className="p-2 text-gray-800 font-gilroyMedium">
-            <p className="text-sm mb-2">{userInfo.name}</p>
+          <div className="p-2 text-gray-800">
+            <p className="text-lg mb-2 font-gilroyMedium">{userInfo.name}</p>
             <hr className="border-gray-300" />
             <Link
               to="/profile"
-              className="block px-3 py-2 hover:bg-gray-100 rounded-lg transition-all duration-200"
+              className="flex items-center px-2 py-2 hover:bg-gray-100 rounded-lg transition-all duration-200"
               onClick={() => setShowMenu(false)}
             >
+              <RiAccountCircleLine className="mr-1 text-xl"/>
               Visit Profile
             </Link>
             <button
               onClick={handleLogout}
-              className="w-full text-left px-3 py-2 text-red-600 hover:bg-gray-100 rounded-lg transition-all duration-200"
+              className="w-full flex items-center text-left px-3 py-2 text-red-600 hover:bg-gray-100 rounded-lg transition-all duration-200"
             >
+              <MdLogout className="mr-1 text-lg"/>
               Logout
             </button>
           </div>

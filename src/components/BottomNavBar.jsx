@@ -3,10 +3,12 @@ import { GoHome } from "react-icons/go";
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { LuSearch } from "react-icons/lu";
 import { RiMessage3Line } from "react-icons/ri";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const BottomNavBar = () => {
   const [active, setActive] = useState("home"); // Track the active tab
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   const handleClick = (tab) => {
     setActive(tab);
@@ -46,7 +48,7 @@ const BottomNavBar = () => {
           <RiMessage3Line className="text-2xl" />
         </button>
 
-        <Link to={"/Login"}>
+        <Link to={isAuthenticated ? '/Profile' : '/Login' }>
           <button
             className={`flex flex-col items-center ${
               active === "profile" ? "text-black" : ""
