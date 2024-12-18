@@ -49,9 +49,13 @@ const UserMenu = ({ userInfo }) => {
           aria-expanded={showMenu}
         >
           <img
-            src={userInfo.avatar || "/default-avatar.png"}
+            src={
+              userInfo?.avatar
+                ? `http://localhost:5000/product_images/${userInfo.avatar}`
+                : 'http://localhost:5000/product_images/default_avatar.png'
+            }
             alt={userInfo.name}
-            className="w-8 h-8 rounded-full"
+            className="w-8 h-8 rounded-full object-cover"
           />
           <span className="ml-2 text-sm text-gray-700 font-gilroyMedium">
             {userInfo.name.split(" ")[0]}

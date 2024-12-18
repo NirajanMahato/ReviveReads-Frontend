@@ -5,8 +5,8 @@ import Navbar from "../../../components/Navbar";
 import { UserContext } from "../../../context/UserContext";
 import AdPostsCard from "./AdPostsCard";
 import AnalyticsCard from "./AnalyticsCard";
-import SaveListsCard from "./SaveListsCard";
 import EditProfile from "./EditProfile";
+import SaveListsCard from "./SaveListsCard";
 
 const UserProfile = () => {
   const { userInfo, loading } = useContext(UserContext);
@@ -38,11 +38,19 @@ const UserProfile = () => {
       <Navbar />
       <div className="md:px-8 px-4 lg:mt-0 md:mt-6 pb-20 md:flex gap-4 font-gilroyMedium">
         {isEditing ? (
-          <EditProfile onClose={closeEditProfile}/> // Show EditProfile when in edit mode
+          <EditProfile onClose={closeEditProfile} /> // Show EditProfile when in edit mode
         ) : (
           <div className="md:w-1/4 w-full md:h-96 flex flex-col items-center rounded-lg md:shadow p-6">
             <div className="md:w-24 md:h-24 w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mb-4">
-              <img src={userInfo?.avatar} alt="user" />
+              <img
+                src={
+                  userInfo?.avatar
+                    ? `http://localhost:5000/product_images/${userInfo.avatar}`
+                    : "http://localhost:5000/product_images/default_avatar.png"
+                }
+                alt="user"
+                className="md:w-24 md:h-24 w-20 h-20 object-cover rounded-full"
+              />
             </div>
             <h2 className="text-xl font-semibold">{userInfo?.name}</h2>
             <p className="text-gray-500 font-gilroyLight text-sm">

@@ -1,11 +1,8 @@
-import { Loader } from "lucide-react";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
 import LoadingScreen from "./components/LoadingScreen";
 import { UserProvider } from "./context/UserContext";
-import EditProfile from "./core/public/userProfile/EditProfile";
-import UserProfile from "./core/public/userProfile/UserProfile";
 import { authActions } from "./store/auth";
 
 // Lazy-loaded components
@@ -17,6 +14,8 @@ const UserIndex = lazy(() => import("./core/private/user"));
 const LoginPage = lazy(() => import("./core/public/loginAndRegister/loginPage"));
 const RegisterPage = lazy(() => import("./core/public/loginAndRegister/RegisterPage"));
 const ProductDetails = lazy(() => import("./core/public/productDetails/ProductDetails"));
+const UserProfile = lazy(() => import("./core/public/userProfile/UserProfile"));
+
 
 function App() {
   const dispatch = useDispatch();
@@ -50,11 +49,11 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}/>
           <Route path="/signup" element={isAuthenticated ? <Navigate to="/" /> : <RegisterPage />}/>
-          <Route path="/Profile" element={<UserProfile />} />
-          <Route path="/EditProfile" element={<EditProfile />} />
           <Route path="/productdetails" element={<ProductDetails />} />
           <Route path="/error" element={<ErrorPage />} />
-          <Route path="/loader" element={<Loader />} />
+
+          {/* Authenticated Routes - Accessible if User is Authenticated */}
+          <Route path="/profile" element={isAuthenticated ? <UserProfile /> : <Navigate to="/" />}/>
 
           {/* Private Routes - Only accessible if authenticated and role is 'admin' */}
           {isAuthenticated && role === "admin" ? (

@@ -34,9 +34,15 @@ const LoginPage = () => {
 
       console.log(response.data.message);
       toast.success("Login successful!");
-      navigate("/");
+
+      if (response.data.user.role === "admin") {
+        navigate('/admin/dashboard');
+        console.log("role is", response.data.user.role);
+      }else{
+        navigate("/");
+      }
     } catch (error) {
-      toast.error(error.response?.data.message || "Login failed");
+      toast.error(error.response?.data.message);
     }
   };
 
