@@ -1,6 +1,24 @@
-import React from "react";
+import React, { useContext, useState } from "react";
+import AddBookModal from "./AddBookModal";
+import { UserContext } from "../../../context/UserContext";
+import toast from "react-hot-toast";
 
 const HeroSection = () => {
+  const {userInfo} = useContext(UserContext);
+  const [showModal, setShowModal] = useState(false);
+
+  const openModal = () => {
+    if (userInfo) {
+      setShowModal(true);
+    } else {
+      toast.error("Login to add book");
+    }
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
   return (
     <>
       <div className="md:px-8 px-6 pt-8 flex">
@@ -12,7 +30,10 @@ const HeroSection = () => {
             <button className="bg-black text-white md:text-sm text-xs font-semibold lg:w-36 md:w-28 w-28 py-3 rounded-lg border-2 border-black hover:bg-white hover:text-black shadow-md transition-all duration-300">
               Explore Now
             </button>
-            <button className="bg-white text-black md:text-sm text-xs font-gilroySemiBold lg:w-36 md:w-28 w-28 py-3 rounded-lg border-2 border-black hover:bg-black hover:text-white shadow-md transition-all duration-300">
+            <button
+              onClick={openModal}
+              className="bg-white text-black md:text-sm text-xs font-gilroySemiBold lg:w-36 md:w-28 w-28 py-3 rounded-lg border-2 border-black hover:bg-black hover:text-white shadow-md transition-all duration-300"
+            >
               Post Book
             </button>
           </div>
@@ -41,6 +62,8 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
+      {/* Modal component */}
+      <AddBookModal showModal={showModal} closeModal={closeModal} />
     </>
   );
 };

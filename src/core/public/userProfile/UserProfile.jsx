@@ -34,7 +34,7 @@ const UserProfile = () => {
   };
 
   return (
-    <>
+    <div className="mx-auto max-w-[1300px]">
       <Navbar />
       <div className="md:px-8 px-4 lg:mt-0 md:mt-6 pb-20 md:flex gap-4 font-gilroyMedium">
         {isEditing ? (
@@ -102,7 +102,7 @@ const UserProfile = () => {
         </div>
       </div>
       <BottomNavBar />
-    </>
+    </div>
   );
 };
 

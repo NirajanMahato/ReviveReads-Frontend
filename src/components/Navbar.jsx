@@ -6,6 +6,7 @@ import logo1 from "/Logos/Logo1.png";
 import logo2 from "/Logos/Logo2.png";
 import { products } from "/src/dummyData/dummyBooks";
 import { UserContext } from "../context/UserContext";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [search, setSearch] = useState("");
@@ -26,13 +27,13 @@ const Navbar = () => {
     <div className="relative w-full">
       <div className="mx-auto flex max-w-7xl items-center justify-between md:px-8 sm:px-6 px-4 py-4">
         <div className="inline-flex items-center space-x-2 lg:w-3/12">
-          <button>
+          <Link to={'/'}>
             <img
               src={logo2}
               className={"lg:w-36 lg:block hidden"}
               alt={"logo"}
             />
-          </button>
+          </Link>
           <button>
             <img
               src={logo1}

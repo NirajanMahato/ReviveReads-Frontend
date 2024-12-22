@@ -40,6 +40,7 @@ const RecommendSection = () => {
                 </div>
                 <div className="flex items-center justify-between md:mt-3 mt-1">
                   <h1 className="font-gilroySemiBold text-gray-700 md:text-lg text-sm">
+                    NPR {""}
                     {product.price}
                   </h1>
                   <h1
@@ -50,7 +51,7 @@ const RecommendSection = () => {
                         ? "bg-yellow-200"
                         : product.condition === "Brand new"
                         ? "bg-green-200"
-                        : product.condition === "Refurbished"
+                        : product.condition === "Acceptable"
                         ? "bg-purple-200"
                         : "bg-gray-200 bg-opacity-80" // Default for other conditions
                     }`}

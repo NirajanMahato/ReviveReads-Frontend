@@ -55,3 +55,20 @@ input[type="search"]::-webkit-search-results-button,
 input[type="search"]::-webkit-search-results-decoration {
   display: none;
 }
+/*file input custom CSS*/
+::-webkit-file-upload-button{
+  background-image: linear-gradient(0deg, #B6BBC4, rgb(0, 0, 0));
+  background-color: #B6BBC4;
+  color: #050505;
+  padding: 7px 6px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Hide arrows in Chrome, Safari, Edge, and Opera */
+.no-arrows::-webkit-outer-spin-button,
+.no-arrows::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

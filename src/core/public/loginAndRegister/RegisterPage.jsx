@@ -31,7 +31,7 @@ const RegisterPage = () => {
 
   return (
     <>
-      <div className="flex w-full h-screen pt-8 px-6 pb-4">
+      <div className="flex w-full h-screen mx-auto max-w-[1300px] pt-8 px-6 pb-4">
         <div className="w-full lg:w-6/12">
           <h1 className="-mt-2">
             <img src={logo2} alt="Logo" className="cursor-pointer md:w-44 w-28" />

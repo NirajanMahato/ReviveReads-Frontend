@@ -8,7 +8,7 @@ import Footer from '../../../components/Footer';
 const Home = () => {
   return (
     <>
-      <div className="min-h-screen">
+      <div className="min-h-screen mx-auto max-w-[1300px]">
         <Navbar/>
         <HeroSection/>
         <RecommendSection/>

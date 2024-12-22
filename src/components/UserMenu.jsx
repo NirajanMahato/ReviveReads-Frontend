@@ -64,7 +64,7 @@ const UserMenu = ({ userInfo }) => {
       ) : (
         <Link to="/login">
           <button className="ml-3 bg-black text-white lg:text-sm text-xs font-gilroyMedium w-20 py-[6px] rounded-lg border-[1.8px] border-black hover:bg-white hover:text-black shadow-md transition-all duration-300">
-            Sign up
+            Sign In
           </button>
         </Link>
       )}
