@@ -3,12 +3,9 @@ import { FaLocationDot } from "react-icons/fa6";
 import BottomNavBar from "../../../components/BottomNavBar";
 import Navbar from "../../../components/Navbar";
 import { UserContext } from "../../../context/UserContext";
-import AdPostsCard from "./AdPostsCard";
-import AnalyticsCard from "./AnalyticsCard";
-import EditProfile from "./EditProfile";
-import SaveListsCard from "./SaveListsCard";
+import AdPostsCard from "../userProfile/AdPostsCard";
 
-const UserProfile = () => {
+const CustomerProfile = () => {
   const { userInfo, loading } = useContext(UserContext);
 
   const formatMemberSince = (dateString) => {
@@ -16,30 +13,10 @@ const UserProfile = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  const [activeTab, setActiveTab] = useState("adPosts");
-  const [isEditing, setIsEditing] = useState(false);
-
-  const tabs = [
-    { id: "adPosts", label: "Ad Posts", component: <AdPostsCard /> },
-    { id: "analytics", label: "Analytics", component: <AnalyticsCard /> },
-    { id: "saveLists", label: "Save Lists", component: <SaveListsCard /> },
-  ];
-
-  const toggleEditProfile = () => {
-    setIsEditing(!isEditing); // Toggle between edit and view mode
-  };
-
-  const closeEditProfile = () => {
-    setIsEditing(false); // Close the edit view
-  };
-
   return (
     <div className="mx-auto max-w-[1300px]">
       <Navbar />
-      <div className="md:px-8 px-2 lg:mt-0 md:mt-6 pb-20 md:flex gap-4 font-gilroyMedium">
-        {isEditing ? (
-          <EditProfile onClose={closeEditProfile} /> // Show EditProfile when in edit mode
-        ) : (
+      <div className="md:px-8 px-4 lg:mt-0 md:mt-6 pb-20 md:flex gap-4 font-gilroyMedium">
           <div className="md:w-1/4 w-full md:h-96 flex flex-col items-center rounded-lg md:shadow p-6">
             <div className="md:w-24 md:h-24 w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mb-4">
               <img
@@ -69,35 +46,25 @@ const UserProfile = () => {
               </p>
             </div>
             <button
-              onClick={toggleEditProfile}
               className="rounded-lg mt-4 bg-gray-800 w-full bg-custom text-white py-2 font-medium"
             >
-              Edit Profile
+              Block user
             </button>
           </div>
-        )}
 
-        <div className="md:w-3/4 shadow rounded-lg pb-4">
+        <div className="md:w-3/4 shadow rounded-lg">
           <div className="border-b">
             <ul className="xl:w-2/5 lg:w-3/5 flex items-center justify-between md:px-6 px-3 py-4 font-gilroy">
-              {tabs.map((tab) => (
                 <li
-                  key={tab.id}
-                  className={`cursor-pointer border rounded-3xl px-3 py-1 ${
-                    activeTab === tab.id
-                      ? "font-semibold text-white bg-gray-700 shadow-md"
-                      : "border-gray-500"
-                  }`}
-                  onClick={() => setActiveTab(tab.id)}
+                  className={'cursor-pointer border rounded-3xl px-3 py-1 font-semibold text-white bg-gray-700 shadow-md'}
                 >
-                  {tab.label}
+                  Ad Posts
                 </li>
-              ))}
             </ul>
           </div>
 
-          <div className="md:px-6 px-4 py-4">
-            {tabs.find((tab) => tab.id === activeTab)?.component}
+          <div className="px-6 py-4">
+            <AdPostsCard />
           </div>
         </div>
       </div>
@@ -106,4 +73,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default CustomerProfile;

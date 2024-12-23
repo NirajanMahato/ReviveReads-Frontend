@@ -4,6 +4,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import LoadingScreen from "./components/LoadingScreen";
 import { UserProvider } from "./context/UserContext";
 import { authActions } from "./store/auth";
+import CustomerProfile from "./core/public/customerProfile/CustomerProfile";
 
 // Lazy-loaded components
 const Home = lazy(() => import("./core/public/homePage/Home"));
@@ -49,7 +50,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}/>
           <Route path="/signup" element={isAuthenticated ? <Navigate to="/" /> : <RegisterPage />}/>
-          <Route path="/productdetails" element={<ProductDetails />} />
+          <Route path="/productdetails/:bookId" element={<ProductDetails />} />
+          <Route path="/customerprofile/:id" element={<CustomerProfile />} />
           <Route path="/error" element={<ErrorPage />} />
 
           {/* Authenticated Routes - Accessible if User is Authenticated */}

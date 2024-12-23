@@ -111,7 +111,7 @@ const AddBookModal = ({ showModal, closeModal }) => {
 
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 flex justify-center items-center z-50">
-      <div className="bg-white p-8 rounded-lg w-[700px] h-[600px]">
+      <div className="bg-white md:px-7 p-4 py-4 rounded-lg w-[650px] h-[600px]">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold">Post Your Book</h2>
           <button
@@ -121,7 +121,7 @@ const AddBookModal = ({ showModal, closeModal }) => {
             &times;
           </button>
         </div>
-        <form onSubmit={handleSubmit} className="mt-4">
+        <form onSubmit={handleSubmit} className="mt-2">
           <div className="">
             <label htmlFor="title" className="block text-sm font-semibold">
               Book Title
@@ -137,7 +137,7 @@ const AddBookModal = ({ showModal, closeModal }) => {
             />
           </div>
 
-          <div className="mt-4">
+          <div className="mt-3">
             <label
               htmlFor="description"
               className="block text-sm font-semibold"
@@ -154,7 +154,7 @@ const AddBookModal = ({ showModal, closeModal }) => {
             />
           </div>
 
-          <div className="mt-4 flex justify-between md:gap-4">
+          <div className="mt-2 flex justify-between md:gap-4 gap-3">
             <div className="w-full">
               <label htmlFor="genre" className="block text-sm font-semibold">
                 Genre
@@ -163,7 +163,7 @@ const AddBookModal = ({ showModal, closeModal }) => {
                 name="genre"
                 value={formData.genre}
                 onChange={handleChange}
-                className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md"
+                className="w-full md:px-4 px-2 py-2 mt-1 md:text-base text-sm border border-gray-300 rounded-md"
                 required
               >
                 <option value="" disabled>
@@ -187,7 +187,7 @@ const AddBookModal = ({ showModal, closeModal }) => {
                 name="condition"
                 value={formData.condition}
                 onChange={handleChange}
-                className="w-full px-4 py-2 mt-1 border border-gray-300 rounded-md"
+                className="w-full md:px-4 px-2 py-2 mt-1 md:text-base text-sm border border-gray-300 rounded-md"
                 required
               >
                 <option value="" disabled>
@@ -201,7 +201,7 @@ const AddBookModal = ({ showModal, closeModal }) => {
             </div>
           </div>
 
-          <div className="mt-4 flex justify-between items-end md:gap-6">
+          <div className="mt-2 flex justify-between items-end md:gap-6 gap-4">
             <div className="w-full">
               <label htmlFor="price" className="block text-sm font-semibold">
                 Price
@@ -238,24 +238,24 @@ const AddBookModal = ({ showModal, closeModal }) => {
                 }
                 className="mr-2"
               />
-              Yes, I offer delivery
+              Yes
             </div>
           </div>
 
-          <div className="mt-4">
+          <div className="mt-3">
             <label htmlFor="images" className="block text-sm font-semibold">
               Upload Images
             </label>
 
-            <div className="flex md:gap-4 mt-2">
+            <div className="flex md:gap-4 gap-2 mt-2">
               {/* Display selected images */}
             <div className="flex flex-wrap gap-2 mb-2">
               {formData.images.map((image, index) => (
-                <div key={index} className="w-32 h-28 relative group">
+                <div key={index} className="md:w-32 md:h-28 w-16 h-16 relative group">
                   <img
                     src={URL.createObjectURL(image)}
                     alt="preview"
-                    className="w-32 h-28 object-cover rounded-md"
+                    className="md:w-32 md:h-28 w-16 h-16 object-cover rounded-md"
                   />
                   {/* Remove button for each image */}
                   <button
@@ -278,17 +278,17 @@ const AddBookModal = ({ showModal, closeModal }) => {
               onChange={handleFileChange}
               className="hidden"
             />
-            <div onClick={handleButtonClick} className="w-32 h-28 border-dashed border-2 border-gray-400 rounded-lg p-2 flex flex-col items-center justify-center cursor-pointer hover:border-gray-600 transition duration-300">
-              <FaCloudUploadAlt className="text-5xl text-gray-700" />
-              <h1 className="text-gray-500 text-sm font-gilroyMedium">Click to upload</h1>
-              <h1 className="text-gray-400 text-[10px] ">Maximum 3 images</h1>
+            <div onClick={handleButtonClick} className="md:w-32 md:h-28 w-16 h-16 text-gray-500 border-dashed border-2 border-gray-400 rounded-lg p-2 flex flex-col items-center justify-center cursor-pointer hover:border-gray-600 hover:bg-gray-100 transition duration-300">
+              <FaCloudUploadAlt className="md:text-5xl text-3xl" />
+              <h1 className="md:text-sm text-[8px] font-gilroyMedium md:block hidden">Click to upload</h1>
+              <h1 className="text-gray-400 md:text-[10px] text-[6px]">Maximum 3 images</h1>
             </div>
             </div>
           </div>
 
           <button
             type="submit"
-            className="mt-4 w-full bg-black text-white py-2 rounded-md"
+            className="mt-4 w-full bg-gray-800 text-white py-2 rounded-md hover:bg-black transition duration-300"
           >
             Post Book
           </button>
