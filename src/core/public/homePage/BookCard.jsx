@@ -30,7 +30,7 @@ const BookCard = () => {
       {products.map((product) => (
         <div
           key={product?._id}
-          className="product-div flex items-center gap-x-2 lg:w-96 border rounded-lg p-3 hover:shadow-lg hover:bg-blue-50 hover:bg-opacity-50 hover:border-gray-300 transition-all delay-75"
+          className="flex items-center gap-x-2 lg:w-96 border rounded-lg p-3 hover:shadow-lg hover:bg-blue-50 hover:bg-opacity-50 hover:border-gray-300 transition-all delay-75"
         >
           <Link to={`/productdetails/${product?._id}`}>
             <img

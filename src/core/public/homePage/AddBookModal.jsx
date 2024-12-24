@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { FaCloudUploadAlt } from "react-icons/fa";
-import { GoPlus } from "react-icons/go";
 import { RxCross2 } from "react-icons/rx";
 
 const AddBookModal = ({ showModal, closeModal }) => {
@@ -46,7 +45,8 @@ const AddBookModal = ({ showModal, closeModal }) => {
 
   // Create a reference for the file input
   const fileInputRef = useRef(null);
-  const handleButtonClick = () => {     // Handle button click to trigger file input
+  const handleButtonClick = () => {
+    // Handle button click to trigger file input
     fileInputRef.current.click();
   };
 
@@ -79,6 +79,7 @@ const AddBookModal = ({ showModal, closeModal }) => {
       );
       console.log(response);
       toast.success("Book posted successfully");
+      window.location.reload();
       // **Reset the form fields**
       setFormData({
         title: "",
@@ -249,40 +250,52 @@ const AddBookModal = ({ showModal, closeModal }) => {
 
             <div className="flex md:gap-4 gap-2 mt-2">
               {/* Display selected images */}
-            <div className="flex flex-wrap gap-2 mb-2">
-              {formData.images.map((image, index) => (
-                <div key={index} className="md:w-32 md:h-28 w-16 h-16 relative group">
-                  <img
-                    src={URL.createObjectURL(image)}
-                    alt="preview"
-                    className="md:w-32 md:h-28 w-16 h-16 object-cover rounded-md"
-                  />
-                  {/* Remove button for each image */}
-                  <button
-                    type="button"
-                    onClick={() => removeImage(index)}
-                    className="absolute -top-2 -right-2 w-6 h-6 text-black bg-white px-1 py-0.5 rounded-full shadow opacity-0 group-hover:opacity-100 hover:bg-gray-400 hover:text-black transition-opacity"
+              <div className="flex flex-wrap gap-2 mb-2">
+                {formData.images.map((image, index) => (
+                  <div
+                    key={index}
+                    className="md:w-32 md:h-28 w-16 h-16 relative group"
                   >
-                    <RxCross2 />
-                  </button>
-                </div>
-              ))}
-            </div>
+                    <img
+                      src={URL.createObjectURL(image)}
+                      alt="preview"
+                      className="md:w-32 md:h-28 w-16 h-16 object-cover rounded-md"
+                    />
+                    {/* Remove button for each image */}
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      className="absolute -top-2 -right-2 w-6 h-6 text-black bg-white px-1 py-0.5 rounded-full shadow opacity-0 group-hover:opacity-100 hover:bg-gray-400 hover:text-black transition-opacity"
+                    >
+                      <RxCross2 />
+                    </button>
+                  </div>
+                ))}
+              </div>
 
-            {/* Input to add more images */}
-            <input
-              type="file"
-              name="images"
-              accept="image/*"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              className="hidden"
-            />
-            <div onClick={handleButtonClick} className="md:w-32 md:h-28 w-16 h-16 text-gray-500 border-dashed border-2 border-gray-400 rounded-lg p-2 flex flex-col items-center justify-center cursor-pointer hover:border-gray-600 hover:bg-gray-100 transition duration-300">
-              <FaCloudUploadAlt className="md:text-5xl text-3xl" />
-              <h1 className="md:text-sm text-[8px] font-gilroyMedium md:block hidden">Click to upload</h1>
-              <h1 className="text-gray-400 md:text-[10px] text-[6px]">Maximum 3 images</h1>
-            </div>
+              {/* Input to add more images */}
+              <input
+                type="file"
+                name="images"
+                accept="image/*"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className="hidden"
+              />
+              {formData.images.length < 4 && (
+                <div
+                  onClick={handleButtonClick}
+                  className="md:w-32 md:h-28 w-16 h-16 text-gray-500 border-dashed border-2 border-gray-400 rounded-lg p-2 flex flex-col items-center justify-center cursor-pointer hover:border-gray-600 hover:bg-gray-100 transition duration-300"
+                >
+                  <FaCloudUploadAlt className="md:text-5xl text-3xl" />
+                  <h1 className="md:text-sm text-[8px] font-gilroyMedium md:block hidden">
+                    Click to upload
+                  </h1>
+                  <h1 className="text-gray-400 md:text-[10px] text-[6px]">
+                    Maximum 4 images
+                  </h1>
+                </div>
+              )}
             </div>
           </div>
 
