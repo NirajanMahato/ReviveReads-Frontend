@@ -1,14 +1,14 @@
 import axios from "axios";
 import { formatDistanceToNowStrict } from "date-fns";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { MdOutlineBookmarkAdd } from "react-icons/md";
 import { RiMessage3Line } from "react-icons/ri";
 import { Link } from "react-router-dom";
-import { UserContext } from "../../../context/UserContext";
 
 const BookCard = () => {
   const [products, setProducts] = useState([]);
-  const { userInfo } = useContext(UserContext);
+  const [sellerInfo, setSellerInfo] = useState(null);
 
   useEffect(() => {
     const fetchbooks = async () => {
@@ -16,14 +16,40 @@ const BookCard = () => {
         const response = await axios.get(
           "http://localhost:5000/book/get-all-books"
         );
-        // console.log(response?.data);
-        setProducts(response.data);
+        const productData = response?.data;
+        setProducts(productData);
+
+        const sellerResponse = await axios.get(
+          "http://localhost:5000/user/get-user-by-id",
+          { headers: { id: productData[0]?.seller } }
+        );
+        setSellerInfo(sellerResponse.data);
       } catch (error) {
         console.error("Error fetching books:", error);
       }
     };
     fetchbooks();
   }, []);
+
+  //function to add book in favourites
+  const handleSaveBook = async (bookId) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/user/add-to-favorites",
+        {
+          bookId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      toast.success(response.data.message);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 md:gap-y-8 gap-y-5 mt-6">
@@ -32,7 +58,7 @@ const BookCard = () => {
           key={product?._id}
           className="flex items-center gap-x-2 lg:w-96 border rounded-lg p-3 hover:shadow-lg hover:bg-blue-50 hover:bg-opacity-50 hover:border-gray-300 transition-all delay-75"
         >
-          <Link to={`/productdetails/${product?._id}`}>
+          <Link to={`/products/${product?._id}`}>
             <img
               src={`http://localhost:5000/product_images/${product?.images[0]}`}
               alt={product.title}
@@ -78,13 +104,16 @@ const BookCard = () => {
               </h1>
             </div>
             <div className="flex md:text-xs text-[11px] justify-between border-b md:pb-2 pb-1">
-              <h1 className="">{userInfo?.address}</h1>
+              <h1 className="">{sellerInfo?.address} </h1>
               <h1 className="pr-1 text-gray-600">
-              {formatDistanceToNowStrict(new Date(product?.updatedAt))} ago
+                {formatDistanceToNowStrict(new Date(product?.updatedAt))} ago
               </h1>
             </div>
             <div className="flex md:mt-3 mt-2 text-gray-600">
-              <button className="flex items-center w-1/2 hover:text-yellow-600">
+              <button
+                onClick={() => handleSaveBook(product?._id)}
+                className="flex items-center w-1/2 hover:text-yellow-600"
+              >
                 <MdOutlineBookmarkAdd className="md:text-2xl" />
                 <h1 className="text-sm">Save</h1>
               </button>

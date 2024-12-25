@@ -1,23 +1,38 @@
-import React, { useContext, useState } from "react";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { LuSearch } from "react-icons/lu";
+import { Link } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 import UserMenu from "./UserMenu";
 import logo1 from "/Logos/Logo1.png";
 import logo2 from "/Logos/Logo2.png";
-import { products } from "/src/dummyData/dummyBooks";
-import { UserContext } from "../context/UserContext";
-import { Link } from "react-router-dom";
 
 const Navbar = () => {
+  const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [isSearchBoxVisible, setIsSearchBoxVisible] = useState(false);
-  
+
   // Access user info from context
   const { userInfo, loading } = useContext(UserContext);
 
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
   };
+
+  useEffect(() => {
+    const fetchbooks = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/book/get-all-books"
+        );
+        setProducts(response?.data);
+      } catch (error) {
+        console.error("Error fetching books:", error);
+      }
+    };
+    fetchbooks();
+  }, []);
 
   const filteredBooks = products.filter((product) =>
     product.title.toLowerCase().includes(search.toLowerCase())
@@ -27,7 +42,7 @@ const Navbar = () => {
     <div className="relative w-full">
       <div className="mx-auto flex max-w-7xl items-center justify-between md:px-8 sm:px-6 px-4 py-4">
         <div className="inline-flex items-center space-x-2 lg:w-3/12">
-          <Link to={'/'}>
+          <Link to={"/"}>
             <img
               src={logo2}
               className={"lg:w-36 lg:block hidden"}
@@ -59,9 +74,7 @@ const Navbar = () => {
                 onBlur={() => setIsSearchBoxVisible(false)}
               />
               <span
-                className={
-                  "animate-pulse text-xl text-gray-600 cursor-pointer"
-                }
+                className={"animate-pulse text-xl text-gray-600 cursor-pointer"}
               >
                 <LuSearch />
               </span>
@@ -85,15 +98,22 @@ const Navbar = () => {
           <ul>
             {filteredBooks.map((book) => (
               <li
-                key={book.id}
+                key={book._id}
                 className="px-4 py-2 hover:bg-gray-200 cursor-pointer font-gilroyMedium text-gray-700"
               >
-                {book.title}
+                <Link
+                  to={`/products/${book._id}`}
+                  onClick={() => setIsSearchBoxVisible(false)}
+                  className="block w-full h-full"
+                >
+                  {book.title}
+                </Link>
               </li>
             ))}
           </ul>
         </div>
       )}
+
     </div>
   );
 };

@@ -1,18 +1,18 @@
 import axios from "axios";
 import { formatDistanceToNowStrict, parseISO } from "date-fns";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { GoClockFill } from "react-icons/go";
 import { MdLocalShipping, MdOutlineBookmarkAdd } from "react-icons/md";
 import { RiMessage3Line } from "react-icons/ri";
 import { useParams } from "react-router-dom";
 import Navbar from "../../../components/Navbar";
-import { UserContext } from "../../../context/UserContext";
 
 const ProductDetails = () => {
   const [product, setProduct] = useState(null);
+  const [sellerInfo, setSellerInfo] = useState(null);
   const [mainImage, setMainImage] = useState("");
-  const { userInfo } = useContext(UserContext);
+
   const [activeTab, setActiveTab] = useState("description");
   const { bookId } = useParams();
 
@@ -26,6 +26,13 @@ const ProductDetails = () => {
 
         setProduct(productData);
         setMainImage(productData.images[0]); // Set initial main image
+
+        const sellerResponse = await axios.get(
+          `http://localhost:5000/user/get-user-by-id`,
+          { headers: { id: productData?.seller } }
+        );
+        setSellerInfo(sellerResponse.data);
+        // console.log(sellerResponse.data);
       } catch (error) {
         console.error("Error fetching books:", error);
       }
@@ -39,6 +46,7 @@ const ProductDetails = () => {
   };
 
   return (
+    
     <>
       <Navbar />
       <div className="flex lg:flex-row flex-col lg:items-start md:items-center md:px-8 px-5 lg:mt-3 md:mt-3 pb-6">
@@ -80,20 +88,21 @@ const ProductDetails = () => {
               <img
                 className="h-12 w-12 rounded-full object-cover shadow"
                 src={
-                  userInfo?.avatar
-                    ? `http://localhost:5000/product_images/${userInfo.avatar}`
+                  sellerInfo?.profileImage
+                    ? `http://localhost:5000/profile_images/${sellerInfo.profileImage}`
                     : "http://localhost:5000/product_images/default_avatar.png"
                 }
                 alt="Seller profile"
               />
               <div>
                 <h3 className="text-sm text-gray-900">
-                  Sold by <b className="font-ppMori"> {userInfo?.name}</b>
+                  Sold by{" "}
+                  <b className="font-ppMori">{sellerInfo?.name || "Seller"}</b>
                 </h3>
 
                 <p className="text-xs text-gray-500">
-                  Member since: {formatMemberSince(userInfo?.createdAt)} •{" "}
-                  {userInfo?.address}
+                  Member since: {formatMemberSince(sellerInfo?.createdAt)} •{" "}
+                  {sellerInfo?.address}
                 </p>
               </div>
             </div>
@@ -141,11 +150,11 @@ const ProductDetails = () => {
           </div>
 
           <div className="flex items-center space-x-4 mt-6 lg:pr-14">
-            <button className="rounded-lg shadow-lg flex items-center justify-center w-1/2 bg-black text-white py-3">
+            <button className="rounded-lg shadow-lg flex items-center justify-center w-1/2 bg-black hover:bg-gray-800 text-white py-3">
               <MdOutlineBookmarkAdd className="md:text-xl  mr-1" />
               Save
             </button>
-            <button className="rounded-lg shadow-lg flex items-center justify-center w-1/2 bg-green-600 text-white py-3">
+            <button className="rounded-lg shadow-lg flex items-center justify-center w-1/2 bg-green-700 hover:bg-green-800 text-white py-3">
               <RiMessage3Line className="md:text-xl  mr-1" />
               Chat Now
             </button>
@@ -212,7 +221,7 @@ const ProductDetails = () => {
                 <div className="absolute inset-0 bg-black bg-opacity-10"></div>
                 <div className="absolute flex items-center bottom-4 left-4 bg-white px-3 py-1 rounded-full text-sm">
                   <FaLocationDot className="mr-1" />
-                  {userInfo?.address}
+                  {sellerInfo?.address}
                 </div>
               </div>
             </div>

@@ -50,7 +50,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}/>
           <Route path="/signup" element={isAuthenticated ? <Navigate to="/" /> : <RegisterPage />}/>
-          <Route path="/productdetails/:bookId" element={<ProductDetails />} />
+          <Route path="/products/:bookId" element={<ProductDetails />} />
           <Route path="/customerprofile/:id" element={<CustomerProfile />} />
           <Route path="/error" element={<ErrorPage />} />
 

@@ -1,38 +1,61 @@
 import axios from "axios";
 import { formatDistanceToNowStrict } from "date-fns";
 import { useContext, useEffect, useState } from "react";
-import { AiOutlineDelete } from "react-icons/ai";
+import toast from "react-hot-toast";
+import { MdBookmarkRemove } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { UserContext } from "../../../context/UserContext";
-import { MdBookmarkRemove } from "react-icons/md";
 
 const SaveListsCard = () => {
-  const [products, setProducts] = useState([]);
+  const [savedBooks, setSavedBooks] = useState([]);
   const { userInfo } = useContext(UserContext);
 
   useEffect(() => {
-    const fetchbooks = async () => {
+    const fetchSavedBooks = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/book/get-all-books"
+          "http://localhost:5000/user/get-favorites-books",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
         );
-        // console.log(response?.data);
-        setProducts(response.data);
+        setSavedBooks(response.data);
       } catch (error) {
-        console.error("Error fetching books:", error);
+        console.error("Error fetching saved books:", error);
       }
     };
-    fetchbooks();
+    fetchSavedBooks();
   }, []);
+
+  // Remove saved book
+  const handleRemoveSavedBook = async (bookId) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:5000/user/remove-from-favorites/${bookId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      setSavedBooks(savedBooks.filter((book) => book._id !== bookId));
+      toast.success(response.data.message);
+    } catch (error) {
+      console.error("Error removing saved book:", error);
+    }
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 md:gap-y-8 gap-y-5">
-      {products.map((product) => (
+      {savedBooks.map((product) => (
         <div
           key={product?._id}
           className="flex items-center gap-x-2 lg:w-96 border rounded-lg p-3 hover:shadow-lg hover:bg-blue-50 hover:bg-opacity-50 hover:border-gray-300 transition-all delay-75"
         >
-          <Link to={`/productdetails/${product?._id}`}>
+          <Link to={`/products/${product?._id}`}>
             <img
               src={`http://localhost:5000/product_images/${product?.images[0]}`}
               alt={product.title}
@@ -86,6 +109,7 @@ const SaveListsCard = () => {
             <div className="flex justify-between md:mt-3 mt-2 pr-2 text-gray-600">
               <h1></h1>
               <button
+                onClick={() => handleRemoveSavedBook(product._id)}
                 className="flex items-center hover:text-red-700"
               >
                 <MdBookmarkRemove className="md:text-xl" />

@@ -16,14 +16,14 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      if (userId && authenticateToken) {
+      if (userId) {
         try {
           const response = await axios.get(
-            "http://localhost:5000/user/get-user-info",
+            "http://localhost:5000/user/get-user-by-id",
             {
               headers: {
                 id: userId,
-                Authorization: `Bearer ${authenticateToken}`,
+                // Authorization: `Bearer ${authenticateToken}`,
               },
             }
           );
