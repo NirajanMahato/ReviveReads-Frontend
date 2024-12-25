@@ -1,3 +1,4 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -6,16 +7,36 @@ import { BsFillPersonFill } from "react-icons/bs";
 import { IoMdLock } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
+import * as yup from "yup";
 import loadingGif from "/BG/buttonLoading.gif";
 import wallpaper from "/BG/wallpaper.jpg";
 import logo2 from "/Logos/Logo2.png";
+
+const schema = yup
+  .object({
+    name: yup
+      .string()
+      .required("Name is required")
+      .min(3, "Name must be at least 3 characters"),
+    email: yup
+      .string()
+      .required("Email is required")
+      .email("Enter a valid email address"),
+    password: yup
+      .string()
+      .required("Password is required")
+      .min(6, "Password must be at least 6 characters"),
+  })
+  .required();
 
 const RegisterPage = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
   const navigate = useNavigate();
 
@@ -73,18 +94,12 @@ const RegisterPage = () => {
                   type="text"
                   placeholder="Full Name"
                   className="w-full outline-none appearance-none"
-                  {...register("name", {
-                    required: "Full Name is required",
-                    minLength: {
-                      value: 3,
-                      message: "Full Name must be at least 3 characters",
-                    },
-                  })}
+                  {...register("name")}
                 />
               </div>
               {errors.name && (
                 <h6 className="md:w-5/12 w-11/12 text-red-500 text-xs">
-                  {errors.name.message}
+                  {errors.name?.message}
                 </h6>
               )}
 
@@ -101,18 +116,12 @@ const RegisterPage = () => {
                   type="email"
                   placeholder="Email"
                   className="w-full outline-none appearance-none"
-                  {...register("email", {
-                    required: "Email is required",
-                    pattern: {
-                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: "Enter a valid email address",
-                    },
-                  })}
+                  {...register("email")}
                 />
               </div>
               {errors.email && (
                 <h6 className="md:w-5/12 w-11/12 text-red-500 text-xs">
-                  {errors.email.message}
+                  {errors.email?.message}
                 </h6>
               )}
 
@@ -129,18 +138,12 @@ const RegisterPage = () => {
                   type="password"
                   placeholder="Password"
                   className="w-full outline-none"
-                  {...register("password", {
-                    required: "Password is required",
-                    minLength: {
-                      value: 6,
-                      message: "Password must be at least 6 characters",
-                    },
-                  })}
+                  {...register("password")}
                 />
               </div>
               {errors.password && (
                 <h6 className="md:w-5/12 w-11/12 text-red-500 text-xs">
-                  {errors.password.message}
+                  {errors.password?.message}
                 </h6>
               )}
 

@@ -1,3 +1,4 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
@@ -5,16 +6,27 @@ import { IoMdLock } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import * as yup from "yup";
 import { authActions } from "../../../store/auth";
 import wallpaper from "/BG/wallpaper.jpg";
 import logo2 from "/Logos/Logo2.png";
+
+const schema = yup
+  .object({
+    email: yup
+      .string()
+      .required("Email is required")
+      .email("Enter a valid email address"),
+    password: yup.string().required("Password is required"),
+  })
+  .required();
 
 const LoginPage = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({ resolver: yupResolver(schema) });
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -36,9 +48,9 @@ const LoginPage = () => {
       toast.success("Login successful!");
 
       if (response.data.user.role === "admin") {
-        navigate('/admin/dashboard');
+        navigate("/admin/dashboard");
         console.log("role is", response.data.user.role);
-      }else{
+      } else {
         navigate("/");
       }
     } catch (error) {
@@ -48,7 +60,9 @@ const LoginPage = () => {
 
   return (
     <>
-      <div className={"flex w-full h-screen mx-auto max-w-[1300px] pt-8 px-6 pb-4"}>
+      <div
+        className={"flex w-full h-screen mx-auto max-w-[1300px] pt-8 px-6 pb-4"}
+      >
         <div className="w-full lg:w-6/12">
           <h1 className="-mt-2">
             <img
@@ -83,13 +97,7 @@ const LoginPage = () => {
                 type={"email"}
                 placeholder={"Email"}
                 className={"w-full outline-none appearance-none"}
-                {...register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message: "Enter a valid email address",
-                  },
-                })}
+                {...register("email")}
               />
             </div>
             {errors.email && (
@@ -113,13 +121,7 @@ const LoginPage = () => {
                 type={"password"}
                 placeholder={"Password"}
                 className={"w-full outline-none"}
-                {...register("password", {
-                  required: "Password is required",
-                  minLength: {
-                    value: 6,
-                    message: "Password must be at least 6 characters",
-                  },
-                })}
+                {...register("password")}
               />
             </div>
             {errors.password && (
