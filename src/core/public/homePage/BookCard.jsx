@@ -1,36 +1,11 @@
 import axios from "axios";
 import { formatDistanceToNowStrict } from "date-fns";
-import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { MdOutlineBookmarkAdd } from "react-icons/md";
 import { RiMessage3Line } from "react-icons/ri";
 import { Link } from "react-router-dom";
 
-const BookCard = () => {
-  const [products, setProducts] = useState([]);
-  const [sellerInfo, setSellerInfo] = useState(null);
-
-  useEffect(() => {
-    const fetchbooks = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/book/get-all-books"
-        );
-        const productData = response?.data;
-        setProducts(productData);
-
-        const sellerResponse = await axios.get(
-          "http://localhost:5000/user/get-user-by-id",
-          { headers: { id: productData[0]?.seller } }
-        );
-        setSellerInfo(sellerResponse.data);
-      } catch (error) {
-        console.error("Error fetching books:", error);
-      }
-    };
-    fetchbooks();
-  }, []);
-
+const BookCard = ({ products }) => {
   //function to add book in favourites
   const handleSaveBook = async (bookId) => {
     try {
@@ -104,7 +79,7 @@ const BookCard = () => {
               </h1>
             </div>
             <div className="flex md:text-xs text-[11px] justify-between border-b md:pb-2 pb-1">
-              <h1 className="">{sellerInfo?.address} </h1>
+              <h1 className="">{product.seller?.address} </h1>
               <h1 className="pr-1 text-gray-600">
                 {formatDistanceToNowStrict(new Date(product?.updatedAt))} ago
               </h1>

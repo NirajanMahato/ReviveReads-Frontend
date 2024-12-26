@@ -10,10 +10,7 @@ const UserMenu = ({ userInfo }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const menuRef = useRef(null);
-
-  const toggleMenu = () => {
-    setShowMenu((prev) => !prev);
-  };
+  const buttonRef = useRef(null);
 
   const handleLogout = () => {
     dispatch(authActions.logout());
@@ -25,14 +22,19 @@ const UserMenu = ({ userInfo }) => {
     navigate("/");
   };
 
+  const handleClickOutside = (event) => {
+    // Close the menu if clicked outside of the menu or button
+    if (
+      menuRef.current &&
+      !menuRef.current.contains(event.target) &&
+      !buttonRef.current.contains(event.target)
+    ) {
+      setShowMenu(false);
+    }
+  };
+
   // Close menu on outside click
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setShowMenu(false);
-      }
-    };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -43,8 +45,11 @@ const UserMenu = ({ userInfo }) => {
     <div className="relative" ref={menuRef}>
       {userInfo && userInfo.name ? (
         <button
+          ref={buttonRef}
           className="flex items-center mx-3 focus:outline-none"
-          onClick={toggleMenu}
+          onClick={() => setShowMenu((prev) => !prev)} // Toggle on click
+          onMouseEnter={() => setShowMenu(true)}  // Show menu on hover
+          onMouseLeave={() => !showMenu && setShowMenu(false)} // Hide on hover out if not clicked
           aria-haspopup="true"
           aria-expanded={showMenu}
         >
@@ -78,7 +83,7 @@ const UserMenu = ({ userInfo }) => {
             <Link
               to="/profile"
               className="flex items-center px-2 py-2 hover:bg-gray-100 rounded-lg transition-all duration-200"
-              onClick={() => setShowMenu(false)}
+              onClick={() => setShowMenu(false)}  // Close menu when clicked
             >
               <RiAccountCircleLine className="mr-1 text-xl"/>
               Visit Profile
