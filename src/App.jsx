@@ -62,7 +62,7 @@ function App() {
             <Route path="/admin" element={<Layout />}>
               <Route index element={<Navigate to="dashboard" />} />
               <Route path="dashboard" element={<DashboardIndex />} />
-              <Route path="user" element={<UserIndex />} />
+              <Route path="users" element={<UserIndex />} />
             </Route>
           ) : (
             <Route path="/admin/*" element={<Navigate to="/login" />} />

@@ -1,31 +1,52 @@
-import React, { useContext, createContext, useState } from "react";
-import { MoreVertical, ChevronLeft, ChevronRight } from "lucide-react";
-import { FiHome, FiSettings, FiUser } from "react-icons/fi";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import React, { createContext, useContext } from "react";
+import { FiSettings, FiUsers } from "react-icons/fi";
+import { PiChartLine } from "react-icons/pi";
+import { NavLink, useNavigate } from "react-router-dom";
+import { UserContext } from "../../../context/UserContext";
 import logo2 from "/Logos/Logo2.png";
 
+// Context for Sidebar State
 const SidebarContext = createContext();
 
-export default function Sidebar() {
-  const [expanded, setExpanded] = useState(true);
+export default function Sidebar({ expanded, onToggle }) {
+  const { userInfo, logout } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   const sidebarItems = [
-    { id: 1, icon: <FiHome />, label: "Dashboard", active: true },
-    { id: 2, icon: <FiUser />, label: "Users", active: false },
-    { id: 3, icon: <FiSettings />, label: "Settings", active: false },
+    {
+      id: 1,
+      icon: <PiChartLine />,
+      label: "Dashboard",
+      path: "/admin/dashboard",
+    },
+    { id: 2, icon: <FiUsers />, label: "Users", path: "/admin/users" },
+    { id: 3, icon: <FiSettings />, label: "Settings", path: "/admin/settings" },
   ];
 
   return (
-    <aside className={`h-screen transition-all duration-300 ${expanded ? "w-60" : "w-16"}`}>
-      <nav className="h-full flex flex-col bg-white border-r shadow-sm">
+    <aside
+      className={`h-screen transition-all duration-300 fixed top-0 left-0 bottom-0 z-50 ${
+        expanded ? "w-60" : "w-16"
+      }`}
+    >
+      <nav className="h-full flex flex-col border-r shadow-sm">
         {/* Logo Section */}
         <div className="p-4 pb-2 flex justify-between items-center">
           <img
             src={logo2}
-            className={`overflow-hidden transition-all duration-300 ${expanded ? "w-32" : "w-0"}`}
+            className={`overflow-hidden transition-all duration-300 ${
+              expanded ? "w-32" : "w-0"
+            }`}
             alt="ReviveReads"
           />
           <button
-            onClick={() => setExpanded((curr) => !curr)}
+            onClick={onToggle} // Toggle sidebar state when clicked
             className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-700"
           >
             {expanded ? <ChevronLeft /> : <ChevronRight />}
@@ -40,66 +61,94 @@ export default function Sidebar() {
                 key={item.id}
                 icon={item.icon}
                 text={item.label}
-                active={item.active}
+                path={item.path}
               />
             ))}
           </ul>
         </SidebarContext.Provider>
 
         {/* Profile Section */}
-        <div className="border-t flex p-3 items-center">
+        <div className="border-t flex p-3 items-center cursor-pointer hover:bg-gray-100 dropdown dropdown-hover dropdown-top dropdown-end">
           <img
-            src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"
-            alt="Profile"
-            className="w-10 h-10 rounded-md"
+            src={
+              userInfo?.avatar
+                ? `http://localhost:5000/product_images/${userInfo.avatar}`
+                : "http://localhost:5000/product_images/default_avatar.png"
+            }
+            alt={userInfo?.name}
+            className="w-10 h-10 rounded-md object-cover"
           />
-          <div className={`overflow-hidden transition-all duration-300 ${expanded ? "w-52 ml-3" : "w-0"}`}>
+          <div
+            className={`overflow-hidden transition-all duration-300 ${
+              expanded ? "w-52 ml-3" : "w-0"
+            }`}
+          >
             <div className="leading-4">
-              <h4 className="font-semibold">Nirajan Mahato</h4>
-              <span className="text-xs text-gray-600">nirajanmahato44@gmail.com</span>
+              <h4 className="font-semibold">{userInfo?.name}</h4>
+              <span className="text-xs text-gray-600">{userInfo?.email}</span>
             </div>
           </div>
-          
-          {/* <MoreVertical size={20} className={`${expanded ? "ml-2" : "ml-0"}`} /> */}
+          <ul
+            tabIndex={0}
+            className="dropdown-content menu bg-gray-100 rounded-box z-[1] w-52 p-2 shadow text-lg font-gilroyMedium"
+          >
+            <li>
+              <a
+                onClick={(e) => {
+                  e.preventDefault(); // Prevent default link behavior
+                  navigate("/");
+                }}
+              >
+                Home
+              </a>
+            </li>
+            <li>
+              <button onClick={handleLogout} className="text-red-600">
+                Logout
+              </button>
+            </li>
+          </ul>
         </div>
       </nav>
     </aside>
   );
 }
 
-function SidebarItem({ icon, text, active }) {
+// SidebarItem Component with Routing
+function SidebarItem({ icon, text, path }) {
   const { expanded } = useContext(SidebarContext);
 
   return (
-    <li
-      className={`
-        relative flex items-center py-2 px-3 my-1
-        font-medium rounded-md cursor-pointer transition-colors group
+    <NavLink
+      to={path}
+      className={({ isActive }) =>
+        `relative flex items-center py-3 px-3 my-1 font-gilroyMedium rounded-md cursor-pointer transition-colors group
         ${
-          active
-            ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 font-gilroyMedium"
-            : "hover:bg-indigo-50 text-gray-600"
-        }
-      `}
+          isActive
+            ? "bg-gradient-to-tr from-gray-800 to-gray-500 text-white"
+            : "hover:bg-gray-50 text-gray-600"
+        }`
+      }
     >
       <span className="text-2xl">{icon}</span>
-      <span className={`overflow-hidden transition-all duration-300 ${expanded ? "w-32 ml-3" : "w-0"}`}>
+      <span
+        className={`overflow-hidden transition-all duration-300 ${
+          expanded ? "w-32 ml-3" : "w-0"
+        }`}
+      >
         {text}
       </span>
 
       {/* Tooltip for collapsed state */}
       {!expanded && (
         <div
-          className={`
-            absolute left-full rounded-md px-2 py-1 ml-6
-            bg-indigo-100 text-indigo-800 text-sm
-            invisible opacity-20 -translate-x-3 transition-all
-            group-hover:visible group-hover:opacity-100 group-hover:translate-x-0
-          `}
+          className={`absolute left-full rounded-md px-2 py-1 ml-6 bg-indigo-100 text-indigo-800 text-sm
+          invisible opacity-20 -translate-x-3 transition-all
+          group-hover:visible group-hover:opacity-100 group-hover:translate-x-0`}
         >
           {text}
         </div>
       )}
-    </li>
+    </NavLink>
   );
 }
