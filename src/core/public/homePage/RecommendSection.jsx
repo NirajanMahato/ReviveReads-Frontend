@@ -70,7 +70,6 @@ const RecommendSection = () => {
           New Listings
         </button>
 
-        {/* Display filtered books */}
         <BookCard products={filteredBooks} />
       </div>
     </>

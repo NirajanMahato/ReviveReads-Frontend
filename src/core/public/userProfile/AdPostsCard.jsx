@@ -105,13 +105,13 @@ const AdPostsCard = () => {
             filteredProducts.map((product) => (
               <div
                 key={product?._id}
-                className="flex items-center gap-x-2 lg:w-96 border rounded-lg p-3 hover:shadow-lg hover:bg-blue-50 hover:bg-opacity-50 hover:border-gray-300 transition-all delay-75"
+                className="flex items-center gap-x-2 lg:w-96 border rounded-lg p-3 hover:shadow-sm hover:border-gray-300 transition-all delay-75"
               >
                 <Link>
                   <img
                     src={`http://localhost:5000/product_images/${product?.images[0]}`}
                     alt={product.title}
-                    className="rounded-lg lg:w-36 md:w-40 w-32 md:h-44 h-36 object-cover hover:scale-105 transition-all delay-75 hover:cursor-pointer"
+                    className="rounded-lg lg:w-36 md:w-40 w-32 md:h-44 h-36 object-cover"
                   />
                 </Link>
                 <div className="info-div flex flex-col px-2 pb-2">

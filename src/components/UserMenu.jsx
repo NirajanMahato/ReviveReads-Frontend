@@ -1,10 +1,8 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { UserContext } from "../context/UserContext"; // Import UserContext
-
+import { UserContext } from "../context/UserContext";
 const UserMenu = () => {
-  const [showMenu, setShowMenu] = useState(false);
-  const { userInfo, logout } = useContext(UserContext); // Access userInfo and logout from context
+  const { userInfo, logout } = useContext(UserContext);
 
   // Determine the profile link based on role
   const profileLink =
@@ -32,7 +30,9 @@ const UserMenu = () => {
             tabIndex={0}
             className="dropdown-content menu bg-gray-100 rounded-box z-[1] w-48 p-2 shadow font-gilroyMedium"
           >
-            <p className="text-lg mb-2 font-gilroyMedium pl-3">{userInfo.name}</p>
+            <p className="text-lg mb-2 font-gilroyMedium pl-3">
+              {userInfo.name}
+            </p>
             <hr className="border-gray-300" />
             <ul>
               <li>

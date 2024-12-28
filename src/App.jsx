@@ -4,7 +4,6 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import LoadingScreen from "./components/LoadingScreen";
 import { UserProvider } from "./context/UserContext";
 import { authActions } from "./store/auth";
-import CustomerProfile from "./core/public/customerProfile/CustomerProfile";
 
 // Lazy-loaded components
 const Home = lazy(() => import("./core/public/homePage/Home"));
@@ -16,6 +15,8 @@ const LoginPage = lazy(() => import("./core/public/loginAndRegister/loginPage"))
 const RegisterPage = lazy(() => import("./core/public/loginAndRegister/RegisterPage"));
 const ProductDetails = lazy(() => import("./core/public/productDetails/ProductDetails"));
 const UserProfile = lazy(() => import("./core/public/userProfile/UserProfile"));
+const CustomerProfile = lazy(() => import( "./core/public/customerProfile/CustomerProfile"));
+const MessagePage = lazy(() => import( "./core/public/messages/messagePage"));
 
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
           <Route path="/signup" element={isAuthenticated ? <Navigate to="/" /> : <RegisterPage />}/>
           <Route path="/products/:bookId" element={<ProductDetails />} />
           <Route path="/customerprofile/:id" element={<CustomerProfile />} />
+          <Route path="/messages" element={<MessagePage />} />
           <Route path="/error" element={<ErrorPage />} />
 
           {/* Authenticated Routes - Accessible if User is Authenticated */}
