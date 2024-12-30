@@ -6,7 +6,6 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { UserContext } from "../../../context/UserContext";
 import logo2 from "/Logos/Logo2.png";
 
-// Context for Sidebar State
 const SidebarContext = createContext();
 
 export default function Sidebar({ expanded, onToggle }) {
@@ -18,6 +17,8 @@ export default function Sidebar({ expanded, onToggle }) {
     navigate("/");
   };
 
+
+  const iconClassName = "text-xl";
   const sidebarItems = [
     {
       id: 1,
@@ -46,7 +47,7 @@ export default function Sidebar({ expanded, onToggle }) {
             alt="ReviveReads"
           />
           <button
-            onClick={onToggle} // Toggle sidebar state when clicked
+            onClick={onToggle}
             className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-700"
           >
             {expanded ? <ChevronLeft /> : <ChevronRight />}
@@ -55,13 +56,14 @@ export default function Sidebar({ expanded, onToggle }) {
 
         {/* Sidebar Items */}
         <SidebarContext.Provider value={{ expanded }}>
-          <ul className="flex-1 px-2">
+          <ul className="flex-1 px-2 text-sm">
             {sidebarItems.map((item) => (
               <SidebarItem
                 key={item.id}
                 icon={item.icon}
                 text={item.label}
                 path={item.path}
+                iconClassName={iconClassName}
               />
             ))}
           </ul>
@@ -115,14 +117,14 @@ export default function Sidebar({ expanded, onToggle }) {
 }
 
 // SidebarItem Component with Routing
-function SidebarItem({ icon, text, path }) {
+function SidebarItem({ icon, text, path, iconClassName }) {
   const { expanded } = useContext(SidebarContext);
 
   return (
     <NavLink
       to={path}
       className={({ isActive }) =>
-        `relative flex items-center py-3 px-3 my-1 font-gilroyMedium rounded-md cursor-pointer transition-colors group
+        `relative flex items-center py-2.5 px-3 my-1 font-gilroyMedium rounded-md cursor-pointer transition-colors group
         ${
           isActive
             ? "bg-gradient-to-tr from-gray-800 to-gray-500 text-white"
@@ -130,7 +132,8 @@ function SidebarItem({ icon, text, path }) {
         }`
       }
     >
-      <span className="text-2xl">{icon}</span>
+      {/* Apply iconClassName dynamically */}
+      <span className={`text-2xl ${iconClassName}`}>{icon}</span>
       <span
         className={`overflow-hidden transition-all duration-300 ${
           expanded ? "w-32 ml-3" : "w-0"

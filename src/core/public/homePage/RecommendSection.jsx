@@ -1,54 +1,27 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import BookCard from "./BookCard";
-import axios from "axios";
+import useBooks from "../../../hooks/useBooks"; // Import custom hook
 
 const RecommendSection = () => {
   const [activeTab, setActiveTab] = useState("Recommended");
-  const [allBooks, setAllBooks] = useState([]);
-  const [filteredBooks, setFilteredBooks] = useState([]);
 
-  useEffect(() => {
-    const fetchbooks = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/book/get-all-books"
-        );
-        const books = response?.data;
-  
-        setAllBooks(books);
-        filterBooks("Recommended", books);
-      } catch (error) {
-        console.error("Error fetching books:", error);
-      }
-    };
-    fetchbooks();
-  }, []);
-  
-  const filterBooks = (tab, books) => {
-    if (tab === "New Listings") {
-      // Sort books based on createdAt timestamp for 'New Listings'
-      const sortedBooks = [...books].sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-      );
-      setFilteredBooks(sortedBooks);
-    } else if (tab === "Recommended") {
-      // Recommendation logic based on price and condition
-      const recommended = books
-        .sort((a, b) => a.price - b.price) // Lower price first
-        .filter((book) => book.condition === "Like New" || book.condition === "Brand New"); // Filter by better condition
-      setFilteredBooks(recommended);
-    }
-  };
+  const { filteredBooks, filterBooks, loading } = useBooks(); // Use the custom hook
 
-  // Handle tab switch
+  // Handle tab change
   const handleTabChange = (tab) => {
-    setActiveTab(tab);
-    filterBooks(tab, allBooks);
+    setActiveTab(tab); // Update active tab
+    filterBooks(tab); // Filter books based on the tab
   };
+
+  // Initial filter when component loads
+  useEffect(() => {
+    filterBooks(activeTab); // Filter books for the initial tab
+  }, [activeTab]); // Re-run filter if active tab changes
 
   return (
     <>
       <div className="md:px-8 px-4 lg:mt-0 md:mt-6 mt-10 pb-20">
+        {/* Tab Buttons */}
         <button
           onClick={() => handleTabChange("Recommended")}
           className={`mr-4 md:text-xl text-lg font-ppMori ${
@@ -70,7 +43,12 @@ const RecommendSection = () => {
           New Listings
         </button>
 
-        <BookCard products={filteredBooks} />
+        {/* Book Cards */}
+        {loading ? (
+          <div className="text-center mt-10">Loading books...</div>
+        ) : (
+          <BookCard products={filteredBooks} />
+        )}
       </div>
     </>
   );

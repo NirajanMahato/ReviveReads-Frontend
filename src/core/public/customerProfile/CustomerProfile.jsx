@@ -6,7 +6,7 @@ import { UserContext } from "../../../context/UserContext";
 import AdPostsCard from "../userProfile/AdPostsCard";
 
 const CustomerProfile = () => {
-  const { userInfo, loading } = useContext(UserContext);
+  const { userInfo } = useContext(UserContext);
 
   const formatMemberSince = (dateString) => {
     const options = { year: "numeric", month: "short", day: "numeric" };

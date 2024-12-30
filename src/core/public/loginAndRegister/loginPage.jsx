@@ -1,13 +1,10 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
 import { useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
 import { IoMdLock } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import * as yup from "yup";
-import { authActions } from "../../../store/auth";
+import useLogin from "../../../hooks/useLogin"; // Import the custom hook
 import wallpaper from "/BG/wallpaper.jpg";
 import logo2 from "/Logos/Logo2.png";
 
@@ -28,34 +25,9 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
+  const { login } = useLogin(); // Use the custom hook
   const submit = async (data) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/user/sign-in",
-        data
-      );
-
-      dispatch(authActions.login());
-      dispatch(authActions.changeRole(response.data.user.role));
-      localStorage.setItem("id", response.data.user.id);
-      localStorage.setItem("token", response.data.user.token);
-      localStorage.setItem("role", response.data.user.role);
-
-      console.log(response.data.message);
-      toast.success("Login successful!");
-
-      if (response.data.user.role === "admin") {
-        navigate("/admin/dashboard");
-        console.log("role is", response.data.user.role);
-      } else {
-        navigate("/");
-      }
-    } catch (error) {
-      toast.error(error.response?.data.message);
-    }
+    await login(data);
   };
 
   return (
@@ -64,7 +36,7 @@ const LoginPage = () => {
         className={"flex w-full h-screen mx-auto max-w-[1300px] pt-8 px-6 pb-4"}
       >
         <div className="w-full lg:w-6/12">
-          <Link to={'/'} className="-mt-2">
+          <Link to={"/"} className="-mt-2">
             <img
               src={logo2}
               alt="Logo"
@@ -74,7 +46,7 @@ const LoginPage = () => {
           <form
             onSubmit={handleSubmit(submit)}
             className={
-              " flex justify-center items-center flex-col md:mt-14 mt-20"
+              "flex justify-center items-center flex-col md:mt-14 mt-20"
             }
           >
             <h1 className={"text-2xl md:text-3xl font-ppMori mb-1 flex"}>

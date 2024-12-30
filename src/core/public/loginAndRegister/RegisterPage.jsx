@@ -1,13 +1,11 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
 import { BsFillPersonFill } from "react-icons/bs";
 import { IoMdLock } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import * as yup from "yup";
+import useRegister from "../../../hooks/useRegister"; // Import the custom hook
 import loadingGif from "/BG/buttonLoading.gif";
 import wallpaper from "/BG/wallpaper.jpg";
 import logo2 from "/Logos/Logo2.png";
@@ -34,37 +32,18 @@ const RegisterPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+  } = useForm({ resolver: yupResolver(schema) });
 
-  const navigate = useNavigate();
-
-  const [loading, setLoading] = useState(false);
-
+  const { registerUser, loading } = useRegister();
   const submit = async (data) => {
-    setLoading(true); // Start loading
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/user/sign-up",
-        data
-      );
-      console.log(response.data.message);
-
-      toast.success(response.data.message);
-      navigate("/Login");
-    } catch (error) {
-      toast.error(error.response?.data.message || "Registration failed");
-    } finally {
-      setLoading(false); // Stop loading
-    }
+    await registerUser(data);
   };
 
   return (
     <>
       <div className="flex w-full h-screen mx-auto max-w-[1300px] pt-8 px-6 pb-4">
         <div className="w-full lg:w-6/12">
-          <Link to={'/'} className="-mt-2">
+          <Link to={"/"} className="-mt-2">
             <img
               src={logo2}
               alt="Logo"

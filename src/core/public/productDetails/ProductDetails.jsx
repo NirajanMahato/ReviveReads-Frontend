@@ -1,44 +1,32 @@
-import axios from "axios";
 import { formatDistanceToNowStrict, parseISO } from "date-fns";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { GoClockFill } from "react-icons/go";
 import { MdLocalShipping, MdOutlineBookmarkAdd } from "react-icons/md";
 import { RiMessage3Line } from "react-icons/ri";
 import { useParams } from "react-router-dom";
+
 import Navbar from "../../../components/Navbar";
+import useProductDetails from "../../../hooks/useProductDetails";
 
 const ProductDetails = () => {
-  const [product, setProduct] = useState(null);
-  const [sellerInfo, setSellerInfo] = useState(null);
-  const [mainImage, setMainImage] = useState("");
-
-  const [activeTab, setActiveTab] = useState("description");
   const { bookId } = useParams();
+  const { product, sellerInfo, loading, error } = useProductDetails(bookId);
 
-  useEffect(() => {
-    const fetchbooks = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5000/book/get-book-by-id/${bookId}`
-        );
-        const productData = response?.data;
+  const [mainImage, setMainImage] = useState("");
+  const [activeTab, setActiveTab] = useState("description");
 
-        setProduct(productData);
-        setMainImage(productData.images[0]); // Set initial main image
+  if (loading) {
+    return <div className="text-center mt-10">Loading...</div>;
+  }
 
-        const sellerResponse = await axios.get(
-          `http://localhost:5000/user/get-user-by-id`,
-          { headers: { id: productData?.seller } }
-        );
-        setSellerInfo(sellerResponse.data);
-        // console.log(sellerResponse.data);
-      } catch (error) {
-        console.error("Error fetching books:", error);
-      }
-    };
-    fetchbooks();
-  }, [bookId]);
+  if (error) {
+    return (
+      <div className="text-center mt-10 text-red-500">
+        Error loading product details.
+      </div>
+    );
+  }
 
   const formatMemberSince = (dateString) => {
     const options = { year: "numeric", month: "short" };
@@ -46,14 +34,16 @@ const ProductDetails = () => {
   };
 
   return (
-    
     <>
       <Navbar />
       <div className="flex lg:flex-row flex-col lg:items-start md:items-center md:px-8 px-5 lg:mt-3 md:mt-3 pb-6">
+        {/* Product Image Section */}
         <div className="lg:w-1/3 md:w-1/2">
           <div className="flex justify-center rounded-lg pt-4 md:pb-8 pb-4">
             <img
-              src={`http://localhost:5000/product_images/${mainImage}`}
+              src={`http://localhost:5000/product_images/${
+                mainImage || product?.images[0]
+              }`}
               alt="book"
               className="rounded-lg object-cover md:w-80 w-44 md:h-96 h-56"
             />
@@ -65,7 +55,7 @@ const ProductDetails = () => {
                 src={`http://localhost:5000/product_images/${image}`}
                 alt={`Book Image ${index + 1}`}
                 className={`rounded-lg object-cover md:w-16 w-10 md:h-16 h-10 cursor-pointer ${
-                  mainImage === image ? "border-2 border-gray-500" : "" // Highlight selected image
+                  mainImage === image ? "border-2 border-gray-500" : ""
                 }`}
                 onClick={() => setMainImage(image)}
               />
@@ -73,16 +63,16 @@ const ProductDetails = () => {
           </div>
         </div>
 
+        {/* Product Details Section */}
         <div className="lg:w-2/3 w-full lg:pl-8 lg:pr-2 lg:mt-0 mt-6">
-          <div>
-            <h1 className="lg:text-3xl md:text-2xl text-xl font-ppMori text-gray-900">
-              {product?.title}
-            </h1>
-            <h1 className="md:text-xl font-gilroyMedium text-gray-500 mt-1 pl-1">
-              रू. {product?.price}
-            </h1>
-          </div>
+          <h1 className="lg:text-3xl md:text-2xl text-xl font-ppMori text-gray-900">
+            {product?.title}
+          </h1>
+          <h1 className="md:text-xl font-gilroyMedium text-gray-500 mt-1 pl-1">
+            रू. {product?.price}
+          </h1>
 
+          {/* Seller Info */}
           <div className="border-t border-b border-gray-200 py-3 my-3">
             <div className="flex items-center space-x-4">
               <img
@@ -99,7 +89,6 @@ const ProductDetails = () => {
                   Sold by{" "}
                   <b className="font-ppMori">{sellerInfo?.name || "Seller"}</b>
                 </h3>
-
                 <p className="text-xs text-gray-500">
                   Member since: {formatMemberSince(sellerInfo?.createdAt)} •{" "}
                   {sellerInfo?.address}
@@ -126,26 +115,6 @@ const ProductDetails = () => {
                   {product?.genre}
                 </p>
               </div>
-              {/* <div>
-                <p className="text-sm text-gray-500">Publication Year</p>
-                <p className="text-sm font-medium text-gray-900">1925</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">ISBN</p>
-                <p className="text-sm font-medium text-gray-900">
-                  978-0743273565
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Pages</p>
-                <p className="text-sm font-medium text-gray-900">180</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Publisher</p>
-                <p className="text-sm font-medium text-gray-900">
-                  Charles Scribner's Sons
-                </p>
-              </div> */}
             </div>
           </div>
 
