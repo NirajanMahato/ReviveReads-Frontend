@@ -3,31 +3,51 @@ import { formatDistanceToNowStrict } from "date-fns";
 import toast from "react-hot-toast";
 import { MdOutlineBookmarkAdd } from "react-icons/md";
 import { RiMessage3Line } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const BookCard = ({ products }) => {
-  //function to add book in favourites
+const BookCard = ({ products, userId }) => {
+
+  const authenticateToken = localStorage.getItem("token");
+  const navigate = useNavigate();
+  const handleChatNow = () => {
+    if (authenticateToken) {
+      navigate("/messages");
+    } else {
+      toast.error("Please login to chat with the seller.");
+    }
+  };
+
   const handleSaveBook = async (bookId) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/user/add-to-favorites",
-        {
-          bookId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+    if (authenticateToken) {
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/user/add-to-favorites",
+          {
+            bookId,
           },
-        }
-      );
-      toast.success(response.data.message);
-    } catch (error) {
-      toast.error(error.response.data.message);
+          {
+            headers: {
+              Authorization: `${authenticateToken}`,
+            },
+          }
+        );
+        toast.success(response.data.message);
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
+    } else {
+      toast.error("Please login to save the book.");
     }
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 md:gap-y-8 gap-y-5 mt-6">
+    <div
+      className={`grid grid-cols-1 gap-x-10 md:gap-y-8 gap-y-5 mt-6 ${
+        userId
+          ? "sm:grid-cols-1 lg:grid-cols-2 lg:px-8"
+          : "sm:grid-cols-2 lg:grid-cols-3"
+      }`}
+    >
       {products.map((product) => (
         <div
           key={product?._id}
@@ -92,7 +112,10 @@ const BookCard = ({ products }) => {
                 <MdOutlineBookmarkAdd className="md:text-2xl" />
                 <h1 className="text-sm">Save</h1>
               </button>
-              <button className="flex items-center w-1/2 hover:text-green-700">
+              <button
+                onClick={handleChatNow}
+                className="flex items-center w-1/2 hover:text-green-700"
+              >
                 <RiMessage3Line className="md:text-2xl" />
                 <h1 className="text-sm pl-1">Chat now</h1>
               </button>

@@ -20,7 +20,11 @@ const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   const tabs = [
-    { id: "adPosts", label: "Ad Posts", component: <AdPostsCard /> },
+    {
+      id: "adPosts",
+      label: "Ad Posts",
+      component: <AdPostsCard userId={userInfo?._id} />,
+    },
     { id: "analytics", label: "Analytics", component: <AnalyticsCard /> },
     { id: "saveLists", label: "Save Lists", component: <SaveListsCard /> },
   ];

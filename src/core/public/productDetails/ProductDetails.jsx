@@ -4,14 +4,16 @@ import { FaLocationDot } from "react-icons/fa6";
 import { GoClockFill } from "react-icons/go";
 import { MdLocalShipping, MdOutlineBookmarkAdd } from "react-icons/md";
 import { RiMessage3Line } from "react-icons/ri";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import Navbar from "../../../components/Navbar";
 import useProductDetails from "../../../hooks/useProductDetails";
 
 const ProductDetails = () => {
   const { bookId } = useParams();
-  const { product, sellerInfo, loading, error } = useProductDetails(bookId);
+  const { product, loading, error } = useProductDetails(bookId);
+  
+  const navigate = useNavigate();
 
   const [mainImage, setMainImage] = useState("");
   const [activeTab, setActiveTab] = useState("description");
@@ -54,8 +56,10 @@ const ProductDetails = () => {
                 key={index}
                 src={`http://localhost:5000/product_images/${image}`}
                 alt={`Book Image ${index + 1}`}
-                className={`rounded-lg object-cover md:w-16 w-10 md:h-16 h-10 cursor-pointer ${
-                  mainImage === image ? "border-2 border-gray-500" : ""
+                className={`rounded-lg object-cover md:w-16 w-10 md:h-16 h-10 cursor-pointer transition-transform ${
+                  mainImage === image
+                    ? "border-2 border-gray-500 transform scale-105"
+                    : "hover:scale-105"
                 }`}
                 onClick={() => setMainImage(image)}
               />
@@ -75,23 +79,28 @@ const ProductDetails = () => {
           {/* Seller Info */}
           <div className="border-t border-b border-gray-200 py-3 my-3">
             <div className="flex items-center space-x-4">
-              <img
-                className="h-12 w-12 rounded-full object-cover shadow"
-                src={
-                  sellerInfo?.avatar
-                    ? `http://localhost:5000/product_images/${sellerInfo?.avatar}`
-                    : "http://localhost:5000/product_images/default_avatar.png"
-                }
-                alt="Seller profile"
-              />
+              <div
+                className="cursor-pointer"
+                onClick={() => navigate(`/customerprofile/${product?.seller._id}`)} // Redirect with user ID
+              >
+                <img
+                  className="h-12 w-12 rounded-full object-cover shadow"
+                  src={
+                    product?.seller.avatar
+                      ? `http://localhost:5000/product_images/${product?.seller.avatar}`
+                      : "http://localhost:5000/product_images/default_avatar.png"
+                  }
+                  alt="Seller profile"
+                />
+              </div>
               <div>
                 <h3 className="text-sm text-gray-900">
                   Sold by{" "}
-                  <b className="font-ppMori">{sellerInfo?.name || "Seller"}</b>
+                  <b className="font-ppMori">{product?.seller.name}</b>
                 </h3>
                 <p className="text-xs text-gray-500">
-                  Member since: {formatMemberSince(sellerInfo?.createdAt)} •{" "}
-                  {sellerInfo?.address}
+                  Member since: {formatMemberSince(product?.seller.createdAt)} •{" "}
+                  {product?.seller.address}
                 </p>
               </div>
             </div>
@@ -190,7 +199,7 @@ const ProductDetails = () => {
                 <div className="absolute inset-0 bg-black bg-opacity-10"></div>
                 <div className="absolute flex items-center bottom-4 left-4 bg-white px-3 py-1 rounded-full text-sm">
                   <FaLocationDot className="mr-1" />
-                  {sellerInfo?.address}
+                  {product?.seller?.address}
                 </div>
               </div>
             </div>

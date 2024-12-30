@@ -26,7 +26,6 @@ export const UserProvider = ({ children }) => {
             {
               headers: {
                 id: userId,
-                // Authorization: `Bearer ${authenticateToken}`, // Uncomment if you need to pass token
               },
             }
           );

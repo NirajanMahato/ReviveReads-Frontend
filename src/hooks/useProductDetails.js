@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 
 const useProductDetails = (bookId) => {
   const [product, setProduct] = useState(null);
-  const [sellerInfo, setSellerInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -14,12 +13,6 @@ const useProductDetails = (bookId) => {
       );
       const productData = productResponse?.data;
       setProduct(productData);
-
-      const sellerResponse = await axios.get(
-        `http://localhost:5000/user/get-user-by-id`,
-        { headers: { id: productData?.seller } }
-      );
-      setSellerInfo(sellerResponse?.data);
 
       setLoading(false);
     } catch (err) {
@@ -33,7 +26,7 @@ const useProductDetails = (bookId) => {
     fetchProductDetails();
   }, [bookId]);
 
-  return { product, sellerInfo, loading, error };
+  return { product, loading, error };
 };
 
 export default useProductDetails;

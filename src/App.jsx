@@ -2,9 +2,9 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
 import LoadingScreen from "./components/LoadingScreen";
+import { SocketContextProvider } from "./context/SocketContext";
 import { UserProvider } from "./context/UserContext";
 import { authActions } from "./store/auth";
-import { SocketContextProvider } from "./context/SocketContext";
 
 // Lazy-loaded components
 const Home = lazy(() => import("./core/public/homePage/Home"));
@@ -22,10 +22,10 @@ const ProductDetails = lazy(() =>
   import("./core/public/productDetails/ProductDetails")
 );
 const UserProfile = lazy(() => import("./core/public/userProfile/UserProfile"));
+const MessagePage  = lazy(() => import("./core/public/messages/MessagePage"));
 const CustomerProfile = lazy(() =>
   import("./core/public/customerProfile/CustomerProfile")
 );
-const MessagePage = lazy(() => import("./core/public/messages/messagePage"));
 
 function App() {
   const dispatch = useDispatch();
@@ -67,11 +67,17 @@ function App() {
               element={isAuthenticated ? <Navigate to="/" /> : <RegisterPage />}
             />
             <Route path="/products/:bookId" element={<ProductDetails />} />
-            <Route path="/customerprofile/:id" element={<CustomerProfile />} />
-            <Route path="/messages" element={<MessagePage />} />
+            <Route
+              path="/customerprofile/:userId"
+              element={<CustomerProfile />}
+            />
             <Route path="/error" element={<ErrorPage />} />
 
             {/* Authenticated Routes - Accessible if User is Authenticated */}
+            <Route
+              path="/messages"
+              element={isAuthenticated ? <MessagePage /> : <Navigate to="/" />}
+            />
             <Route
               path="/profile"
               element={isAuthenticated ? <UserProfile /> : <Navigate to="/" />}

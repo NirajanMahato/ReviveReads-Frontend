@@ -7,21 +7,18 @@ const RecommendSection = () => {
 
   const { filteredBooks, filterBooks, loading } = useBooks(); // Use the custom hook
 
-  // Handle tab change
   const handleTabChange = (tab) => {
-    setActiveTab(tab); // Update active tab
-    filterBooks(tab); // Filter books based on the tab
+    setActiveTab(tab);
+    filterBooks(tab);
   };
 
-  // Initial filter when component loads
   useEffect(() => {
-    filterBooks(activeTab); // Filter books for the initial tab
-  }, [activeTab]); // Re-run filter if active tab changes
+    filterBooks(activeTab);
+  }, [activeTab]);
 
   return (
     <>
       <div className="md:px-8 px-4 lg:mt-0 md:mt-6 mt-10 pb-20">
-        {/* Tab Buttons */}
         <button
           onClick={() => handleTabChange("Recommended")}
           className={`mr-4 md:text-xl text-lg font-ppMori ${
@@ -43,7 +40,6 @@ const RecommendSection = () => {
           New Listings
         </button>
 
-        {/* Book Cards */}
         {loading ? (
           <div className="text-center mt-10 ">Loading books...</div>
         ) : (
