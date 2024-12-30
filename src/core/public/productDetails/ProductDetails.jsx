@@ -78,8 +78,8 @@ const ProductDetails = () => {
               <img
                 className="h-12 w-12 rounded-full object-cover shadow"
                 src={
-                  sellerInfo?.profileImage
-                    ? `http://localhost:5000/profile_images/${sellerInfo.profileImage}`
+                  sellerInfo?.avatar
+                    ? `http://localhost:5000/product_images/${sellerInfo?.avatar}`
                     : "http://localhost:5000/product_images/default_avatar.png"
                 }
                 alt="Seller profile"

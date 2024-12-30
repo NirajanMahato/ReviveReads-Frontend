@@ -40,7 +40,7 @@ const Navbar = () => {
 
   return (
     <div className="relative w-full">
-      <div className="mx-auto flex max-w-7xl items-center justify-between md:px-8 sm:px-6 px-4 py-4">
+      <div className="mx-auto flex max-w-7xl items-center justify-between md:pl-8 sm:px-6 px-4 py-4">
         <div className="inline-flex items-center space-x-2 lg:w-3/12">
           <Link to={"/"}>
             <img
@@ -61,7 +61,7 @@ const Navbar = () => {
           <div className="flex items-center justify-end w-full lg:pr-8 pr-2">
             <div
               className={
-                "lg:w-64 md:w-40 w-36 h-[39px] flex items-center justify-between rounded-lg px-2     bg-gray-200"
+                "lg:w-64 md:w-40 w-36 h-[39px] flex items-center justify-between rounded-lg px-2 bg-gray-200"
               }
             >
               <input
