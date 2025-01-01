@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const useBooks = () => {
+const useApprovedBooks = () => {
   const [allBooks, setAllBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -10,12 +10,7 @@ const useBooks = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        "http://localhost:5000/book/get-all-books",
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+        "http://localhost:5000/book/get-approved-books",
       );
       const books = response?.data;
 
@@ -53,4 +48,4 @@ const useBooks = () => {
   return { allBooks, setAllBooks, filteredBooks, filterBooks, loading };
 };
 
-export default useBooks;
+export default useApprovedBooks;

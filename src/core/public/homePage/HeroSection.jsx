@@ -11,7 +11,7 @@ const HeroSection = () => {
     if (userInfo) {
       setShowModal(true);
     } else {
-      toast.error("Login to add book");
+      toast.error("Please login to add book");
     }
   };
 

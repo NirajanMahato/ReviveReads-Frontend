@@ -5,6 +5,7 @@ import { GoClockFill } from "react-icons/go";
 import { MdLocalShipping, MdOutlineBookmarkAdd } from "react-icons/md";
 import { RiMessage3Line } from "react-icons/ri";
 import { useNavigate, useParams } from "react-router-dom";
+import map from "/BG/map.png"
 
 import Navbar from "../../../components/Navbar";
 import useProductDetails from "../../../hooks/useProductDetails";
@@ -192,7 +193,7 @@ const ProductDetails = () => {
             <div className="md:p-6 rounded-lg border border-gray-200">
               <div className="relative md:h-48 h-28 rounded-lg overflow-hidden cursor-pointer">
                 <img
-                  src="https://ai-public.creatie.ai/gen_page/map_placeholder_1280x720.png"
+                  src={map}
                   alt="Location Map"
                   className="absolute inset-0 w-full h-full object-cover"
                 />

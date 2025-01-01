@@ -6,8 +6,8 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { FaEdit } from "react-icons/fa";
 import { LuSearch } from "react-icons/lu";
 import { Link } from "react-router-dom";
-import notAvailable from "/BG/notAvailable.svg";
 import useUserBooks from "../../../hooks/useUserBooks";
+import notAvailable from "/BG/notAvailable.svg";
 
 const AdPostsCard = ({ userId }) => {
   const [filteredProducts, setFilteredProducts] = useState([]); // Filtered products
@@ -51,10 +51,8 @@ const AdPostsCard = ({ userId }) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
 
-    const filtered = allBooks.filter(
-      (product) =>
-        product.title.toLowerCase().includes(query) ||
-        product.description.toLowerCase().includes(query)
+    const filtered = allBooks.filter((product) =>
+      product.title.toLowerCase().includes(query)
     );
     setFilteredProducts(filtered); // Update filtered results
   };
@@ -62,9 +60,7 @@ const AdPostsCard = ({ userId }) => {
   return (
     <div className="font-gilroy">
       {/* Search Bar */}
-      <div
-        className="md:w-10/12 w-11/12 py-2 border-solid border rounded-lg border-gray-500 mt-6 flex items-center justify-between p-4"
-      >
+      <div className="md:w-10/12 w-11/12 py-2 border-solid border rounded-lg border-gray-500 mt-6 flex items-center justify-between p-4">
         <input
           type="text"
           value={searchQuery}
@@ -96,38 +92,47 @@ const AdPostsCard = ({ userId }) => {
               </Link>
               <div className="info-div flex flex-col px-2 pb-2">
                 <div className="hover:cursor-pointer">
-                  <h1 className="font-gilroySemiBold md:text-lg" style={{ lineHeight: "1" }}>
+                  <h1
+                    className="font-gilroySemiBold md:text-lg"
+                    style={{ lineHeight: "1" }}
+                  >
                     {product?.title}
                   </h1>
-                  <h1 className="md:text-xs text-[10px] text-gray-600 mt-1 md:mb-0 mb-1" style={{ lineHeight: "1" }}>
+                  <h1
+                    className="md:text-xs text-[10px] text-gray-600 mt-1 md:mb-0 mb-1"
+                    style={{ lineHeight: "1" }}
+                  >
                     {product.description.length > 50
                       ? `${product?.description.substring(0, 50)}...`
                       : product?.description}
                   </h1>
                 </div>
-                <div className="flex items-center justify-between md:mt-3 mt-1">
+                <div className="flex items-center justify-between md:mt-3 mt-11pr-2">
                   <h1 className="font-gilroySemiBold text-gray-700 md:text-lg text-sm">
                     NPR {product?.price}
                   </h1>
-                  <h1
-                    className={`text-[10px] rounded-full px-[6px] py-[2px] bg-opacity-80 ${
-                      product.condition === "Like New"
-                        ? "bg-blue-200"
-                        : product.condition === "Used"
-                        ? "bg-yellow-200"
-                        : product.condition === "Brand New"
-                        ? "bg-green-200"
-                        : product.condition === "Acceptable"
-                        ? "bg-purple-200"
-                        : "bg-gray-200 bg-opacity-80"
-                    }`}
-                  >
+                  <h1 className={"text-[10px] border-b"}>
                     {product?.condition}
                   </h1>
                 </div>
-                <div className="flex md:text-xs text-[11px] justify-between border-b md:pb-2 pb-1">
+                <div className="flex md:text-xs text-[11px] justify-between items-center border-b md:pb-2 pb-1">
                   <h1 className="pr-1 text-gray-600">
-                    Posted {formatDistanceToNowStrict(new Date(product?.updatedAt))} ago
+                    Posted{" "}
+                    {formatDistanceToNowStrict(new Date(product?.updatedAt))}{" "}
+                    ago
+                  </h1>
+                  <h1
+                    className={`px-2 py-1 text-xs rounded-full ${
+                      product.status === "Pending"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : product.status === "Approved"
+                        ? "bg-green-100 text-green-800"
+                        : product.status === "Declined"
+                        ? "bg-red-100 text-red-800"
+                        : ""
+                    }`}
+                  >
+                    {product?.status}
                   </h1>
                 </div>
                 <div className="flex md:mt-3 mt-2 text-gray-600">
@@ -135,7 +140,10 @@ const AdPostsCard = ({ userId }) => {
                     <FaEdit className="md:text-lg" />
                     <h1 className="text-sm pl-1">Edit</h1>
                   </button>
-                  <button onClick={() => deleteBook(product?._id)} className="flex items-center w-1/2 hover:text-red-700">
+                  <button
+                    onClick={() => deleteBook(product?._id)}
+                    className="flex items-center w-1/2 hover:text-red-700"
+                  >
                     <AiOutlineDelete className="md:text-xl" />
                     <h1 className="text-sm">Delete</h1>
                   </button>
@@ -146,9 +154,15 @@ const AdPostsCard = ({ userId }) => {
         ) : (
           <div className="flex flex-col items-center justify-center py-20">
             <div className="text-center">
-              <img src={notAvailable} alt="No Ads Available" className="w-40 mx-auto mb-4" />
+              <img
+                src={notAvailable}
+                alt="No Ads Available"
+                className="w-40 mx-auto mb-4"
+              />
               <h2 className="text-xl font-semibold">No Ads Available</h2>
-              <p className="text-gray-500 mb-4">Start selling by posting your first ad</p>
+              <p className="text-gray-500 mb-4">
+                Start selling by posting your first ad
+              </p>
               <Link to="/post-ad">
                 <button className="bg-gray-800 text-white px-4 py-2 rounded-md">
                   Post New Ad

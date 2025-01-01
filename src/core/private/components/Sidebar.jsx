@@ -5,6 +5,7 @@ import { PiChartLine } from "react-icons/pi";
 import { NavLink, useNavigate } from "react-router-dom";
 import { UserContext } from "../../../context/UserContext";
 import logo2 from "/Logos/Logo2.png";
+import { FaBook } from "react-icons/fa6";
 
 const SidebarContext = createContext();
 
@@ -27,7 +28,8 @@ export default function Sidebar({ expanded, onToggle }) {
       path: "/admin/dashboard",
     },
     { id: 2, icon: <FiUsers />, label: "Users", path: "/admin/users" },
-    { id: 3, icon: <FiSettings />, label: "Settings", path: "/admin/settings" },
+    { id: 3, icon: <FaBook />, label: "Book Listings", path: "/admin/booklistings" },
+    { id: 4, icon: <FiSettings />, label: "Settings", path: "/admin/settings" },
   ];
 
   return (

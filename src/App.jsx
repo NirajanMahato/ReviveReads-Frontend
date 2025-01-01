@@ -5,6 +5,7 @@ import LoadingScreen from "./components/LoadingScreen";
 import { SocketContextProvider } from "./context/SocketContext";
 import { UserProvider } from "./context/UserContext";
 import { authActions } from "./store/auth";
+import BookListings from "./core/private/bookListings";
 
 // Lazy-loaded components
 const Home = lazy(() => import("./core/public/homePage/Home"));
@@ -48,7 +49,7 @@ function App() {
   }, [dispatch]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingScreen />;
   }
 
   return (
@@ -89,6 +90,7 @@ function App() {
                 <Route index element={<Navigate to="dashboard" />} />
                 <Route path="dashboard" element={<DashboardIndex />} />
                 <Route path="users" element={<UserIndex />} />
+                <Route path="booklistings" element={<BookListings />} />
               </Route>
             ) : (
               <Route path="/admin/*" element={<Navigate to="/login" />} />
