@@ -29,7 +29,7 @@ export default function Sidebar({ expanded, onToggle }) {
     },
     { id: 2, icon: <FiUsers />, label: "Users", path: "/admin/users" },
     { id: 3, icon: <FaBook />, label: "Book Listings", path: "/admin/booklistings" },
-    { id: 4, icon: <FiSettings />, label: "Settings", path: "/admin/settings" },
+    // { id: 4, icon: <FiSettings />, label: "Settings", path: "/admin/settings" },
   ];
 
   return (
@@ -72,7 +72,7 @@ export default function Sidebar({ expanded, onToggle }) {
         </SidebarContext.Provider>
 
         {/* Profile Section */}
-        <div className="border-t flex p-3 items-center cursor-pointer hover:bg-gray-100 dropdown dropdown-hover dropdown-top dropdown-end">
+        <div className="border-t flex p-3 items-center cursor-pointer hover:bg-gray-100 dropdown dropdown-hover dropdown-top dropdown-content">
           <img
             src={
               userInfo?.avatar
@@ -138,7 +138,7 @@ function SidebarItem({ icon, text, path, iconClassName }) {
       <span className={`text-2xl ${iconClassName}`}>{icon}</span>
       <span
         className={`overflow-hidden transition-all duration-300 ${
-          expanded ? "w-32 ml-3" : "w-0"
+          expanded ? "w-32 ml-3" : "w-0 h-0"
         }`}
       >
         {text}

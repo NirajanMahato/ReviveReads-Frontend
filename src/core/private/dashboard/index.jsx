@@ -1,3 +1,4 @@
+import { createColumnHelper } from "@tanstack/react-table";
 import {
   BarElement,
   CategoryScale,
@@ -11,9 +12,8 @@ import {
 } from "chart.js";
 import React from "react";
 import { Bar, Line } from "react-chartjs-2";
-import { FaEdit } from "react-icons/fa";
+import { FaBook, FaEdit } from "react-icons/fa";
 import {
-  FaBox,
   FaCartShopping,
   FaSackDollar,
   FaTrash,
@@ -21,6 +21,7 @@ import {
 } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import useFetchUsers from "../../../hooks/useFetchUsers";
+import DataTable from "../../../shared/DataTable/DataTable";
 
 ChartJS.register(
   CategoryScale,
@@ -51,15 +52,16 @@ const Dashboard = () => {
       bgColor: "bg-yellow-100",
       icon: <FaCartShopping />,
       iconBgColor: "bg-yellow-500",
+      link: "/admin/booklistings",
     },
-    {
-      id: 3,
-      value: "120",
-      label: "Books Delivered",
-      bgColor: "bg-green-100",
-      icon: <FaBox />,
-      iconBgColor: "bg-green-500",
-    },
+    // {
+    //   id: 3,
+    //   value: "120",
+    //   label: "Books Delivered",
+    //   bgColor: "bg-blue-100",
+    //   icon: <FaBox />,
+    //   iconBgColor: "bg-blue-500",
+    // },
     {
       id: 4,
       value: "45",
@@ -67,25 +69,35 @@ const Dashboard = () => {
       bgColor: "bg-purple-100",
       icon: <FaUserPlus />,
       iconBgColor: "bg-purple-500",
+      link: "/admin/users",
+    },
+    {
+      id: 5,
+      value: 5, // This will dynamically be calculated
+      label: "New Books Added",
+      bgColor: "bg-green-100",
+      icon: <FaBook />, // You can use any relevant icon here
+      iconBgColor: "bg-green-500",
+      link: "/admin/booklistings",
     },
   ];
 
   // Data for Charts
   const revenueData = {
     labels: [
+      "Sunday",
       "Monday",
       "Tuesday",
       "Wednesday",
       "Thursday",
       "Friday",
       "Saturday",
-      "Sunday",
     ],
     datasets: [
       {
         label: "Online Sales",
         data: [15000, 18000, 25000, 16000, 14000, 19000, 22000],
-        backgroundColor: "#6366F1",
+        backgroundColor: "#0095FF",
       },
       {
         label: "Offline Sales",
@@ -118,6 +130,73 @@ const Dashboard = () => {
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 3);
 
+  // Define columns using TanStack ColumnHelper
+  const columnHelper = createColumnHelper();
+
+  const columns = [
+    columnHelper.accessor("avatar", {
+      header: "User",
+      cell: (info) => (
+        <div className="flex items-center">
+          <img
+            src={`http://localhost:5000/product_images/${info.getValue()}`}
+            alt="Avatar"
+            className="w-8 h-8 rounded-full object-cover"
+          />
+          <div className="ml-3">
+            <p className="text-sm font-medium text-gray-900">
+              {info.row.original.name}
+            </p>
+            <p className="text-sm text-gray-500 -mt-1">
+              {info.row.original.email}
+            </p>
+          </div>
+        </div>
+      ),
+    }),
+    columnHelper.accessor("phone", {
+      header: "Phone",
+      cell: (info) => info.getValue() || "N/A",
+    }),
+    columnHelper.accessor("status", {
+      header: "Status",
+      cell: (info) => {
+        const status = info.getValue();
+        return (
+          <span
+            className={`px-2 py-1 text-xs font-medium rounded-full ${
+              status === "Active"
+                ? "text-green-700 bg-green-100"
+                : status === "Away"
+                ? "text-yellow-700 bg-yellow-100"
+                : "text-red-700 bg-red-100"
+            }`}
+          >
+            {status}
+          </span>
+        );
+      },
+    }),
+    columnHelper.accessor("lastActivity", {
+      header: "Last Activity",
+      cell: (info) => info.getValue() || "N/A",
+    }),
+    columnHelper.display({
+      id: "actions",
+      header: "Actions",
+      cell: () => (
+        <div className="flex space-x-2">
+          <button className="text-blue-500 hover:text-blue-700">
+            <FaEdit />
+          </button>
+          <button className="text-red-500 hover:text-red-700">
+            <FaTrash />
+          </button>
+        </div>
+      ),
+    }),
+  ];
+
   return (
     <div className="px-4 py-1.5 bg-gray-100 min-h-screen">
       <h1 className="text-2xl font-bold">Dashboard</h1>
@@ -129,24 +208,25 @@ const Dashboard = () => {
             <h1 className=" font-bold text-lg">Sales summary</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mt-3">
               {summaryCards.map((card) => (
-                <div
-                  key={card.id}
-                  className={`p-4 flex items-center gap-3 rounded-lg shadow ${card.bgColor}`}
-                >
+                <Link key={card.id} to={card.link}>
                   <div
-                    className={`text-lg text-white w-9 h-10 flex items-center justify-center rounded-lg ${card.iconBgColor}`}
+                    className={`p-4 flex items-center gap-3 rounded-lg shadow cursor-pointer hover:shadow-lg ${card.bgColor}`}
                   >
-                    {card.icon}
+                    <div
+                      className={`text-lg text-white w-9 h-10 flex items-center justify-center rounded-lg ${card.iconBgColor}`}
+                    >
+                      {card.icon}
+                    </div>
+                    <div className="flex flex-col">
+                      <p className="text-gray-500 text-sm font-gilroyMedium">
+                        {card.label}
+                      </p>
+                      <h3 className="text-xl font-gilroySemiBold -mt-1">
+                        {card.value}
+                      </h3>
+                    </div>
                   </div>
-                  <div className="flex flex-col">
-                    <p className="text-gray-500 text-sm font-gilroyMedium">
-                      {card.label}
-                    </p>
-                    <h3 className="text-xl font-gilroySemiBold -mt-1">
-                      {card.value}
-                    </h3>
-                  </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -167,7 +247,7 @@ const Dashboard = () => {
 
           <div className="bg-white rounded-lg shadow mt-6">
             <div className="px-6 py-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">
                   Recent Users
                 </h3>
@@ -177,76 +257,7 @@ const Dashboard = () => {
                   </button>
                 </Link>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full mt-3">
-                  <thead>
-                    <tr className="text-left text-xs font-gilroyMedium text-gray-500 uppercase tracking-wider">
-                      <th className="px-5">User</th>
-                      <th className="px-5">Phone</th>
-                      <th className="px-5">Status</th>
-                      <th className="px-5">Last Activity</th>
-                      <th className="px-5">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {recentUsers.map((user) => (
-                      <tr key={user._id}>
-                        <td className="px-5 py-3">
-                          <div className="flex items-center">
-                            <img
-                              src={`http://localhost:5000/product_images/${user?.avatar}`}
-                              alt={user.name}
-                              className="w-8 h-8 rounded-full object-cover"
-                            />
-                            <div className="ml-3">
-                              <p className="text-sm font-medium text-gray-900">
-                                {user?.name}
-                              </p>
-                              <p className="text-sm text-gray-500 -mt-1">
-                                {user?.email}
-                              </p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="text-sm text-gray-900">
-                            {user?.phone || "N/A"}
-                          </span>
-                        </td>
-                        <td className="px-4 py-4">
-                          <span
-                            className={`px-2 py-1 text-xs font-medium rounded-full ${
-                              user.status === "Active"
-                                ? "text-green-700 bg-green-100"
-                                : user.status === "Away"
-                                ? "text-yellow-700 bg-yellow-100"
-                                : "text-red-700 bg-red-100"
-                            }`}
-                          >
-                            {/* {user.status} */}
-                            Away
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="text-sm text-gray-500">
-                            {/* {user.lastActivity} */}1 hour ago
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex space-x-2">
-                            <button className="text-blue-500 hover:text-blue-700 mr-3">
-                              <FaEdit />
-                            </button>
-                            <button className="text-red-500 hover:text-red-700">
-                              <FaTrash />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <DataTable data={recentUsers} columns={columns} />
             </div>
           </div>
         </div>

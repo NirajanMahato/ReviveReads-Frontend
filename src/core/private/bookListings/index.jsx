@@ -1,8 +1,12 @@
+import { createColumnHelper } from "@tanstack/react-table";
 import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import { FaEye } from "react-icons/fa";
 import { LuSearch } from "react-icons/lu";
 import useBooks from "../../../hooks/useBooks";
+import DataTable from "../../../shared/DataTable/DataTable";
+import BookDetailsModal from "../components/BookDetailModal";
 
 const BookListings = () => {
   const { allBooks, loading, setAllBooks } = useBooks();
@@ -13,17 +17,24 @@ const BookListings = () => {
   const [conditionFilter, setConditionFilter] = useState("All Conditions");
   const [sortOption, setSortOption] = useState("Latest");
 
+  // State for modal
+  const [selectedBook, setSelectedBook] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   // Filter books based on the selected criteria
   const filteredBooks = allBooks
     .filter((book) => {
-      return (
-        ((statusFilter === "All Statuses" || book.status === statusFilter) &&
-          (conditionFilter === "All Conditions" ||
-            book.condition === conditionFilter) &&
-            book.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
-            book.genre.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            book.seller.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      const matchesStatus =
+        statusFilter === "All Statuses" || book.status === statusFilter;
+      const matchesCondition =
+        conditionFilter === "All Conditions" ||
+        book.condition === conditionFilter;
+      const matchesSearchQuery =
+        book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        book.genre.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        book.seller.name.toLowerCase().includes(searchQuery.toLowerCase());
+
+      return matchesStatus && matchesCondition && matchesSearchQuery;
     })
     .sort((a, b) => {
       if (sortOption === "Price: Low to High") return a.price - b.price;
@@ -36,6 +47,15 @@ const BookListings = () => {
   // Function to handle status updates
   const handleStatusUpdate = async (bookId, status) => {
     try {
+      const book = allBooks.find((book) => book._id === bookId); // If the book is already in the target status (Approved or Declined)
+      if (book.status === "Approved" && status === "Approved") {
+        toast.error("This book has already been approved.");
+        return;
+      }
+      if (book.status === "Declined" && status === "Declined") {
+        toast.error("This book has already been declined.");
+        return;
+      }
       const response = await axios.patch(
         `http://localhost:5000/book/approve-book/${bookId}`,
         { status },
@@ -46,7 +66,6 @@ const BookListings = () => {
         }
       );
 
-      // Update the UI with the new status
       const updatedBooks = allBooks.map((book) =>
         book._id === bookId
           ? { ...book, status: response.data.data.status }
@@ -61,6 +80,109 @@ const BookListings = () => {
     }
   };
 
+  // Function to reset filters
+  const resetFilters = () => {
+    setSearchQuery("");
+    setStatusFilter("All Statuses");
+    setConditionFilter("All Conditions");
+    setSortOption("Latest");
+  };
+
+  // Function to open the modal with the selected book's details
+  const openModal = (book) => {
+    setSelectedBook(book);
+    setIsModalOpen(true);
+  };
+
+  // Function to close the modal
+  const closeModal = () => {
+    setSelectedBook(null);
+    setIsModalOpen(false);
+  };
+
+  // Define columns for DataTable
+  const columnHelper = createColumnHelper();
+
+  const columns = [
+    columnHelper.accessor("_id", {
+      header: "View",
+      cell: (info) => (
+        <button onClick={() => openModal(info.row.original)}>
+          <FaEye className="text-xl text-gray-600" />
+        </button>
+      ),
+    }),
+    columnHelper.accessor("title", {
+      header: "Book",
+      cell: (info) => {
+        const book = info.row.original;
+        return (
+          <div className="flex flex-col">
+            <div className="grid grid-cols-4 gap-1 mb-2">
+              {book.images.slice(0, 4).map((image, index) => (
+                <div key={index} className="w-10 h-10 overflow-hidden rounded">
+                  <img
+                    className="object-cover w-full h-full"
+                    src={`http://localhost:5000/product_images/${image}`}
+                    alt={`Image ${index + 1} of ${book.title}`}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="text-sm font-gilroyMedium text-gray-900 hover:text-custom cursor-pointer">
+              {book.title}
+            </div>
+          </div>
+        );
+      },
+    }),
+    columnHelper.accessor("genre", { header: "Genre" }),
+    columnHelper.accessor("condition", { header: "Condition" }),
+    columnHelper.accessor("seller.name", { header: "Seller" }),
+    columnHelper.accessor("status", {
+      header: "Status",
+      cell: (info) => {
+        const status = info.getValue();
+        return (
+          <span
+            className={`inline-block px-3 py-1 text-sm font-semibold rounded-full ${
+              status === "Pending"
+                ? "bg-yellow-100 text-yellow-800"
+                : status === "Approved"
+                ? "bg-green-100 text-green-800"
+                : "bg-red-100 text-red-800"
+            }`}
+          >
+            {status}
+          </span>
+        );
+      },
+    }),
+    columnHelper.display({
+      id: "actions",
+      header: "Actions",
+      cell: (info) => {
+        const book = info.row.original;
+        return (
+          <div className="space-y-2 flex flex-col">
+            <button
+              onClick={() => handleStatusUpdate(book._id, "Approved")}
+              className="py-1 w-20 text-sm text-white bg-gray-900 hover:bg-green-600 rounded-md"
+            >
+              Approve
+            </button>
+            <button
+              onClick={() => handleStatusUpdate(book._id, "Declined")}
+              className="py-1 w-20 text-sm text-white bg-red-500 hover:bg-red-600 rounded-md"
+            >
+              Decline
+            </button>
+          </div>
+        );
+      },
+    }),
+  ];
+
   return (
     <div className="px-4 bg-gray-100 min-h-screen flex flex-col">
       <h2 className="text-2xl font-bold">Book Listings</h2>
@@ -70,21 +192,18 @@ const BookListings = () => {
         <div>Loading...</div>
       ) : (
         <div className="mt-6 bg-white rounded-lg shadow">
-          <div className="px-4 py-5 sm:p-6">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {/* Search Box */}
-              <div className="rounded-md flex items-center justify-around w-full py-2 border border-gray-300 bg-white">
-                <input
-                  type="text"
-                  className="sm:text-sm"
-                  placeholder="Search books, sellers, genres..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <LuSearch className="text-lg text-gray-500" />
-              </div>
-
-              {/* Filter by Status */}
+          <div className="py-5 sm:p-6 flex items-center gap-4">
+            <div className="rounded-md min-w-60 flex items-center justify-between py-2 px-2 border border-gray-300 bg-white">
+              <input
+                type="text"
+                className="sm:text-sm w-full"
+                placeholder="Search books, sellers, genres..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <LuSearch className="text-xl text-gray-500" />
+            </div>
+            <div className="w-full grid gap-4 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
@@ -96,7 +215,6 @@ const BookListings = () => {
                 <option>Declined</option>
               </select>
 
-              {/* Filter by Condition */}
               <select
                 value={conditionFilter}
                 onChange={(e) => setConditionFilter(e.target.value)}
@@ -109,7 +227,6 @@ const BookListings = () => {
                 <option>Acceptable</option>
               </select>
 
-              {/* Sort by Price */}
               <select
                 value={sortOption}
                 onChange={(e) => setSortOption(e.target.value)}
@@ -120,99 +237,30 @@ const BookListings = () => {
                 <option>Price: High to Low</option>
               </select>
             </div>
+            <div className="">
+              <button
+                onClick={resetFilters}
+                className="w-20 py-2 text-sm text-white bg-gray-800 hover:bg-gray-900 rounded-md col-span-1"
+              >
+                Reset
+              </button>
+            </div>
           </div>
 
-          {/* Book Table */}
-          <div className="flex flex-col">
-            <div className="py-2 min-w-full">
-              <div className="overflow-hidden border-b border-gray-200">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="pl-6 py-3 text-left">Select</th>
-                      <th className="px-6 w-full py-3 text-center">Book</th>
-                      <th className="px-6 py-3 text-left">Genre</th>
-                      <th className="px-6 py-3 text-left">Condition</th>
-                      <th className="px-6 py-3 text-left">Seller</th>
-                      <th className="px-6 py-3 text-left">Status</th>
-                      <th className="px-6 py-3 text-left">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {filteredBooks.map((book) => (
-                      <tr key={book._id}>
-                        <td className="pl-9 py-4">
-                          <input type="checkbox" className="h-4 w-4" />
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex flex-col items-center">
-                            <div className="grid grid-cols-4 gap-1 mb-2">
-                              {book?.images.slice(0, 4).map((image, index) => (
-                                <div
-                                  key={index}
-                                  className="w-10 h-10 overflow-hidden rounded"
-                                >
-                                  <img
-                                    className="object-cover w-full h-full"
-                                    src={`http://localhost:5000/product_images/${image}`}
-                                    alt={`Image ${index + 1} of ${book.title}`}
-                                  />
-                                </div>
-                              ))}
-                            </div>
-                            <div className="text-sm font-gilroyMedium text-gray-900 hover:text-custom cursor-pointer">
-                              {book?.title}
-                            </div>
-                          </div>
-                        </td>
-
-                        <td className="px-6 py-4">{book.genre}</td>
-                        <td className="px-6 py-4">{book.condition}</td>
-                        <td className="px-6 py-4 ">{book.seller.name}</td>
-                        <td className="px-6 py-4">
-                          <span
-                            className={`inline-block px-3 py-1 text-sm font-semibold rounded-full ${
-                              book.status === "Pending"
-                                ? "bg-yellow-100 text-yellow-800"
-                                : book.status === "Approved"
-                                ? "bg-green-100 text-green-800"
-                                : book.status === "Declined"
-                                ? "bg-red-100 text-red-800"
-                                : ""
-                            }`}
-                          >
-                            {book.status}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="space-y-2">
-                            <button
-                              onClick={() =>
-                                handleStatusUpdate(book._id, "Approved")
-                              }
-                              className="py-1 w-20 text-sm text-white bg-gray-900 hover:bg-green-600 rounded-md border border-transparent"
-                            >
-                              Approve
-                            </button>
-                            <button
-                              onClick={() =>
-                                handleStatusUpdate(book._id, "Declined")
-                              }
-                              className="py-1 w-20 text-sm text-white bg-red-500 hover:bg-red-600 rounded-md border border-transparent"
-                            >
-                              Decline
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+          <div className="pl-4">
+            <DataTable columns={columns} data={filteredBooks} />
           </div>
         </div>
       )}
+
+      {/* Book Details Modal */}
+      <BookDetailsModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        book={selectedBook}
+        onApprove={handleStatusUpdate}
+        onDecline={handleStatusUpdate}
+      />
     </div>
   );
 };
