@@ -79,7 +79,6 @@ const AddBookModal = ({ showModal, closeModal }) => {
       );
       console.log(response);
       toast.success("Book posted successfully");
-      window.location.reload();
       // **Reset the form fields**
       setFormData({
         title: "",
@@ -91,9 +90,10 @@ const AddBookModal = ({ showModal, closeModal }) => {
         images: [],
       });
       closeModal();
+      window.location.reload();
     } catch (error) {
       console.error(error);
-      toast.error("Error posting book");
+      toast.error(error.response.data.message);
     }
   };
 

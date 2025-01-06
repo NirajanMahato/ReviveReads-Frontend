@@ -41,7 +41,7 @@ const RecommendSection = () => {
         </button>
 
         {loading ? (
-          <div className="text-center mt-10 ">Loading books...</div>
+          <div className="text-center mt-10"><h1 className="loading loading-infinity loading-lg"></h1></div>
         ) : (
           <BookCard products={filteredBooks} />
         )}

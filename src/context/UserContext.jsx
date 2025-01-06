@@ -22,12 +22,7 @@ export const UserProvider = ({ children }) => {
       if (userId) {
         try {
           const response = await axios.get(
-            "http://localhost:5000/user/get-user-by-id",
-            {
-              headers: {
-                id: userId,
-              },
-            }
+            `http://localhost:5000/user/get-user-by-id/${userId}` // Adjust endpoint
           );
           setUserInfo(response.data);
         } catch (error) {

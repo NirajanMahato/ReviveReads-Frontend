@@ -81,7 +81,7 @@ const AdPostsCard = ({ userId }) => {
           filteredProducts.map((product) => (
             <div
               key={product?._id}
-              className="flex items-center gap-x-2 lg:w-96 border rounded-lg p-3 hover:shadow-sm hover:border-gray-300 transition-all delay-75"
+              className="flex items-center gap-x-2 max-w-96 border rounded-lg p-3 hover:shadow-sm hover:border-gray-300 transition-all delay-75"
             >
               <Link>
                 <img

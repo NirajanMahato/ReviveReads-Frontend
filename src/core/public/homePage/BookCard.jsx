@@ -4,14 +4,33 @@ import toast from "react-hot-toast";
 import { MdOutlineBookmarkAdd } from "react-icons/md";
 import { RiMessage3Line } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
+import useConversation from "../../../zustand/useConverstaion";
 
 const BookCard = ({ products, userId }) => {
-
   const authenticateToken = localStorage.getItem("token");
+  const { selectedConversation, setSelectedConversation } = useConversation();
+
   const navigate = useNavigate();
-  const handleChatNow = () => {
+
+  const handleChatNow = async (chatUserId) => {
     if (authenticateToken) {
-      navigate("/messages");
+      try {
+        // Fetch seller details using the seller ID
+        const res = await axios.get(
+          `http://localhost:5000/user/get-user-by-id/${chatUserId}` // Adjust endpoint
+        );
+
+        // Set the selected conversation with the fetched user data
+        setSelectedConversation(res.data);
+
+        // Navigate to the messages page
+        navigate("/messages");
+      } catch (error) {
+        const errorMessage = error.response
+          ? error.response.data.error
+          : error.message;
+        toast.error(errorMessage);
+      }
     } else {
       toast.error("Please login to chat with the seller.");
     }
@@ -44,14 +63,14 @@ const BookCard = ({ products, userId }) => {
     <div
       className={`grid grid-cols-1 gap-x-10 md:gap-y-8 gap-y-5 mt-6 ${
         userId
-          ? "sm:grid-cols-1 lg:grid-cols-2 lg:px-8"
-          : "sm:grid-cols-2 lg:grid-cols-3"
+          ? "grid-cols-1 xl:grid-cols-2 lg:px-8"
+          : "md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"
       }`}
     >
       {products.map((product) => (
         <div
           key={product?._id}
-          className="flex items-center gap-x-2 lg:w-96 border rounded-lg p-3 hover:shadow-lg hover:bg-blue-50 hover:bg-opacity-50 hover:border-gray-300 transition-all delay-75"
+          className="flex items-center max-w-96 gap-x-2 lg:w-96 border rounded-lg p-3 hover:shadow-lg hover:bg-blue-50 hover:bg-opacity-50 hover:border-gray-300 transition-all delay-75"
         >
           <Link to={`/products/${product?._id}`}>
             <img
@@ -113,7 +132,7 @@ const BookCard = ({ products, userId }) => {
                 <h1 className="text-sm">Save</h1>
               </button>
               <button
-                onClick={handleChatNow}
+                onClick={() => handleChatNow(product?.seller?._id)}
                 className="flex items-center w-1/2 hover:text-green-700"
               >
                 <RiMessage3Line className="md:text-2xl" />

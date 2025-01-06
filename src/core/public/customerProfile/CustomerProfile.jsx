@@ -4,8 +4,8 @@ import { FaLocationDot } from "react-icons/fa6";
 import { useParams } from "react-router-dom";
 import BottomNavBar from "../../../components/BottomNavBar";
 import Navbar from "../../../components/Navbar";
-import BookCard from "../homePage/BookCard";
 import useUserBooks from "../../../hooks/useUserBooks";
+import BookCard from "../homePage/BookCard";
 
 const CustomerProfile = () => {
   const { userId } = useParams();
@@ -13,15 +13,14 @@ const CustomerProfile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const {allBooks} = useUserBooks(userId);
+  const { allBooks } = useUserBooks(userId);
 
   // Fetch user details using Axios
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/user/get-user-by-id`,
-          { headers: { id: userId } }
+          `http://localhost:5000/user/get-user-by-id/${userId}` // Adjust endpoint
         );
         setUserInfo(response.data);
       } catch (err) {

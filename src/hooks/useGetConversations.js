@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import toast from "react-hot-toast";
 
 const useGetConversations = () => {
@@ -9,22 +10,23 @@ const useGetConversations = () => {
     const getConversations = async () => {
       setLoading(true);
       try {
-        const res = await fetch("http://localhost:5000/user/get-users-for-sidebar", {headers: {
+        const res = await axios.get("http://localhost:5000/user/get-users-for-sidebar", {
+          headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
-        }});
-        const data = await res.json();
-        if (data.error) {
-          throw new Error(data.error);
-        }
-        setConversations(data);
+          },
+        });
+        setConversations(res.data);
       } catch (error) {
-        toast.error(error.message);
+        const errorMessage = error.response ? error.response.data.error : error.message;
+        toast.error(errorMessage);
       } finally {
         setLoading(false);
       }
     };
+
     getConversations();
   }, []);
+
   return { loading, conversations };
 };
 

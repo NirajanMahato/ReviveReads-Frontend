@@ -108,7 +108,7 @@ const BookListings = () => {
       header: "View",
       cell: (info) => (
         <button onClick={() => openModal(info.row.original)}>
-          <FaEye className="text-xl text-gray-600" />
+          <FaEye className="text-xl text-gray-600 hover:text-green-700" />
         </button>
       ),
     }),
@@ -117,20 +117,19 @@ const BookListings = () => {
       cell: (info) => {
         const book = info.row.original;
         return (
-          <div className="flex flex-col">
-            <div className="grid grid-cols-4 gap-1 mb-2">
-              {book.images.slice(0, 4).map((image, index) => (
-                <div key={index} className="w-10 h-10 overflow-hidden rounded">
-                  <img
-                    className="object-cover w-full h-full"
-                    src={`http://localhost:5000/product_images/${image}`}
-                    alt={`Image ${index + 1} of ${book.title}`}
-                  />
-                </div>
-              ))}
+          <div className="flex items-center space-x-2">
+            <div className="w-12 h-12 overflow-hidden rounded">
+              <img
+                className="object-cover w-full h-full"
+                src={`http://localhost:5000/product_images/${book.images[0]}`}
+                alt={`Image of ${book.title}`}
+              />
             </div>
-            <div className="text-sm font-gilroyMedium text-gray-900 hover:text-custom cursor-pointer">
-              {book.title}
+            <div className="flex flex-col font-gilroyMedium">
+              <div className="text-sm text-gray-900 hover:text-custom cursor-pointer">
+                {book.title}
+              </div>
+              <div className="text-xs text-gray-600">NPR {book.price}</div>
             </div>
           </div>
         );
@@ -193,7 +192,7 @@ const BookListings = () => {
       ) : (
         <div className="mt-6 bg-white rounded-lg shadow">
           <div className="py-5 sm:p-6 flex items-center gap-4">
-            <div className="rounded-md min-w-60 flex items-center justify-between py-2 px-2 border border-gray-300 bg-white">
+            <div className="rounded-md min-w-60 h-12 flex items-center justify-between py-2 px-3 border border-gray-300 bg-white">
               <input
                 type="text"
                 className="sm:text-sm w-full"
@@ -207,7 +206,7 @@ const BookListings = () => {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md sm:text-sm"
+                className="select select-bordered focus:outline-none w-full max-w-xs"
               >
                 <option>All Statuses</option>
                 <option>Pending</option>
@@ -218,7 +217,7 @@ const BookListings = () => {
               <select
                 value={conditionFilter}
                 onChange={(e) => setConditionFilter(e.target.value)}
-                className="block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md sm:text-sm"
+                className="select select-bordered focus:outline-none w-full max-w-xs"
               >
                 <option>All Conditions</option>
                 <option>Brand New</option>
@@ -230,7 +229,7 @@ const BookListings = () => {
               <select
                 value={sortOption}
                 onChange={(e) => setSortOption(e.target.value)}
-                className="block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md sm:text-sm"
+                className="select select-bordered focus:outline-none w-full max-w-xs"
               >
                 <option>Sort by: Latest</option>
                 <option>Price: Low to High</option>
