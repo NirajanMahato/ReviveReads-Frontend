@@ -9,9 +9,7 @@ const useApprovedBooks = () => {
   const fetchBooks = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        "http://localhost:5000/book/get-approved-books",
-      );
+      const response = await axios.get("/api/book/get-approved-books");
       const books = response?.data;
 
       setAllBooks(books); // Store all books

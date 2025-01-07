@@ -2,9 +2,7 @@ import { useEffect, useState } from "react";
 import useApprovedBooks from "../../../hooks/useApprovedBooks";
 import BookCard from "./BookCard";
 
-const RecommendSection = () => {
-  const [activeTab, setActiveTab] = useState("Recommended");
-
+const RecommendSection = ({activeTab, setActiveTab}) => {
   const { filteredBooks, filterBooks, loading } = useApprovedBooks(); // Use the custom hook
 
   const handleTabChange = (tab) => {

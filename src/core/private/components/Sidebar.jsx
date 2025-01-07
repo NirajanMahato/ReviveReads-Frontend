@@ -76,8 +76,8 @@ export default function Sidebar({ expanded, onToggle }) {
           <img
             src={
               userInfo?.avatar
-                ? `http://localhost:5000/product_images/${userInfo.avatar}`
-                : "http://localhost:5000/product_images/default_avatar.png"
+                ? `/api/product_images/${userInfo.avatar}`
+                : "/api/product_images/default_avatar.png"
             }
             alt={userInfo?.name}
             className="w-10 h-10 rounded-md object-cover"

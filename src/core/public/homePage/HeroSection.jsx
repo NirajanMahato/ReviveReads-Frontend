@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
-import AddBookModal from "./AddBookModal";
-import { UserContext } from "../../../context/UserContext";
 import toast from "react-hot-toast";
+import { UserContext } from "../../../context/UserContext";
+import AddBookModal from "./AddBookModal";
 
-const HeroSection = () => {
-  const {userInfo} = useContext(UserContext);
+const HeroSection = ({ scrollToRecommendSection }) => {
+  const { userInfo } = useContext(UserContext);
   const [showModal, setShowModal] = useState(false);
 
   const openModal = () => {
@@ -27,7 +27,10 @@ const HeroSection = () => {
             Find Your Next Read Here!
           </h1>
           <div className="flex md:gap-4 gap-2 md:mt-6 mt-3">
-            <button className="bg-black text-white md:text-sm text-xs font-semibold lg:w-36 md:w-28 w-28 py-3 rounded-lg border-2 border-black hover:bg-white hover:text-black shadow-md transition-all duration-300">
+            <button
+              onClick={scrollToRecommendSection}
+              className="bg-black text-white md:text-sm text-xs font-semibold lg:w-36 md:w-28 w-28 py-3 rounded-lg border-2 border-black hover:bg-white hover:text-black shadow-md transition-all duration-300"
+            >
               Explore Now
             </button>
             <button

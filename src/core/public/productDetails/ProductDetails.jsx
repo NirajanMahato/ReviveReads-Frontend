@@ -5,7 +5,7 @@ import { GoClockFill } from "react-icons/go";
 import { MdLocalShipping, MdOutlineBookmarkAdd } from "react-icons/md";
 import { RiMessage3Line } from "react-icons/ri";
 import { useNavigate, useParams } from "react-router-dom";
-import map from "/BG/map.png"
+import map from "/BG/map.png";
 
 import Navbar from "../../../components/Navbar";
 import useProductDetails from "../../../hooks/useProductDetails";
@@ -13,7 +13,7 @@ import useProductDetails from "../../../hooks/useProductDetails";
 const ProductDetails = () => {
   const { bookId } = useParams();
   const { product, loading, error } = useProductDetails(bookId);
-  
+
   const navigate = useNavigate();
 
   const [mainImage, setMainImage] = useState("");
@@ -44,9 +44,7 @@ const ProductDetails = () => {
         <div className="lg:w-1/3 md:w-1/2">
           <div className="flex justify-center rounded-lg pt-4 md:pb-8 pb-4">
             <img
-              src={`http://localhost:5000/product_images/${
-                mainImage || product?.images[0]
-              }`}
+              src={`/api/product_images/${mainImage || product?.images[0]}`}
               alt="book"
               className="rounded-lg object-cover md:w-80 w-44 md:h-96 h-56"
             />
@@ -55,7 +53,7 @@ const ProductDetails = () => {
             {product?.images.map((image, index) => (
               <img
                 key={index}
-                src={`http://localhost:5000/product_images/${image}`}
+                src={`/api/product_images/${image}`}
                 alt={`Book Image ${index + 1}`}
                 className={`rounded-lg object-cover md:w-16 w-10 md:h-16 h-10 cursor-pointer transition-transform ${
                   mainImage === image
@@ -82,22 +80,23 @@ const ProductDetails = () => {
             <div className="flex items-center space-x-4">
               <div
                 className="cursor-pointer"
-                onClick={() => navigate(`/customerprofile/${product?.seller._id}`)} // Redirect with user ID
+                onClick={() =>
+                  navigate(`/customerprofile/${product?.seller._id}`)
+                } // Redirect with user ID
               >
                 <img
                   className="h-12 w-12 rounded-full object-cover shadow"
                   src={
                     product?.seller.avatar
-                      ? `http://localhost:5000/product_images/${product?.seller.avatar}`
-                      : "http://localhost:5000/product_images/default_avatar.png"
+                      ? `/api/product_images/${product?.seller.avatar}`
+                      : "/api/product_images/default_avatar.png"
                   }
                   alt="Seller profile"
                 />
               </div>
               <div>
                 <h3 className="text-sm text-gray-900">
-                  Sold by{" "}
-                  <b className="font-ppMori">{product?.seller.name}</b>
+                  Sold by <b className="font-ppMori">{product?.seller.name}</b>
                 </h3>
                 <p className="text-xs text-gray-500">
                   Member since: {formatMemberSince(product?.seller.createdAt)} •{" "}

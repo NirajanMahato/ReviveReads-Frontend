@@ -57,7 +57,7 @@ const BookListings = () => {
         return;
       }
       const response = await axios.patch(
-        `http://localhost:5000/book/approve-book/${bookId}`,
+        `/api/book/approve-book/${bookId}`,
         { status },
         {
           headers: {
@@ -121,7 +121,7 @@ const BookListings = () => {
             <div className="w-12 h-12 overflow-hidden rounded">
               <img
                 className="object-cover w-full h-full"
-                src={`http://localhost:5000/product_images/${book.images[0]}`}
+                src={`/api/product_images/${book.images[0]}`}
                 alt={`Image of ${book.title}`}
               />
             </div>

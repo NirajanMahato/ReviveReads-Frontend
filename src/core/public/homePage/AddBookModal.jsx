@@ -73,7 +73,7 @@ const AddBookModal = ({ showModal, closeModal }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/book/post-book",
+        "/api/book/post-book",
         form,
         { headers }
       );

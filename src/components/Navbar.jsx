@@ -24,7 +24,7 @@ const Navbar = () => {
     const fetchbooks = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/book/get-approved-books"
+          "/api/book/get-approved-books"
         );
         setProducts(response?.data);
       } catch (error) {

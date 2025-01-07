@@ -5,23 +5,27 @@ const Footer = () => {
     <>
       <div
         className={
-          "w-full md:h-52 h-0 text-gray-900 flex items-center justify-end md:px-10 px-3"
+          "w-full md:h-44 h-0 gap-6 text-gray-900 flex items-center justify-end md:px-10 px-3"
         }
         style={{
-          background: "linear-gradient(to bottom,  #ffffff, #969696)",
+          background: "linear-gradient(to left,  #ffffff, #161617)",
         }}
       >
-        <div className="">
-          <h1 className="lg:text-base font-gilroySemiBold">CONTACTS</h1>
-          <h2 className="lg:text-sm text-xs text-gray-600 mt-1">
-            +977 9820002202 <br />
-            Dellibazar, Kathmandu
-          </h2>
+        <div className="flex items-start gap-10">
+          <div>
+            <h1 className="lg:text-base font-gilroySemiBold">CONTACTS</h1>
+            <h2 className="lg:text-sm text-xs text-gray-600 mt-1">
+              +977 9820002202 <br />
+              Dellibazar, Kathmandu
+            </h2>
+          </div>
 
-          <h1 className="font-gilroySemiBold lg:mt-6 mt-2">INQUIRES</h1>
-          <h2 className="lg:text-sm text-xs text-gray-600">
-            revive-reads@gmail.com
-          </h2>
+          <div>
+            <h1 className="font-gilroySemiBold">INQUIRES</h1>
+            <h2 className="lg:text-sm text-xs text-gray-600">
+              revive-reads@gmail.com
+            </h2>
+          </div>
         </div>
         <div className={"md:w-40 w-3/12"}>
           <a

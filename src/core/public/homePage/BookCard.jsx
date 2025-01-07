@@ -17,7 +17,7 @@ const BookCard = ({ products, userId }) => {
       try {
         // Fetch seller details using the seller ID
         const res = await axios.get(
-          `http://localhost:5000/user/get-user-by-id/${chatUserId}` // Adjust endpoint
+          `/api/user/get-user-by-id/${chatUserId}` // Adjust endpoint
         );
 
         // Set the selected conversation with the fetched user data
@@ -40,13 +40,13 @@ const BookCard = ({ products, userId }) => {
     if (authenticateToken) {
       try {
         const response = await axios.post(
-          "http://localhost:5000/user/add-to-favorites",
+          "/api/user/add-to-favorites",
           {
             bookId,
           },
           {
             headers: {
-              Authorization: `${authenticateToken}`,
+              Authorization: `Bearer ${authenticateToken}`,
             },
           }
         );
@@ -74,7 +74,7 @@ const BookCard = ({ products, userId }) => {
         >
           <Link to={`/products/${product?._id}`}>
             <img
-              src={`http://localhost:5000/product_images/${product?.images[0]}`}
+              src={`/api/product_images/${product?.images[0]}`}
               alt={product.title}
               className="rounded-lg lg:w-36 md:w-40 w-32 md:h-44 h-36 object-cover hover:scale-105 transition-all delay-75 hover:cursor-pointer"
             />

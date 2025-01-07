@@ -9,14 +9,11 @@ const useBooks = () => {
   const fetchBooks = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        "http://localhost:5000/book/get-all-books",
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await axios.get("/api/book/get-all-books", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       const books = response?.data;
 
       setAllBooks(books); // Store all books

@@ -139,7 +139,7 @@ const Dashboard = () => {
       cell: (info) => (
         <div className="flex items-center">
           <img
-            src={`http://localhost:5000/product_images/${info.getValue()}`}
+            src={`/api/product_images/${info.getValue()}`}
             alt="Avatar"
             className="w-8 h-8 rounded-full object-cover"
           />

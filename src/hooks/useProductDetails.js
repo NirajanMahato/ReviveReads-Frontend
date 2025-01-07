@@ -9,7 +9,7 @@ const useProductDetails = (bookId) => {
   const fetchProductDetails = async () => {
     try {
       const productResponse = await axios.get(
-        `http://localhost:5000/book/get-book-by-id/${bookId}`
+        `/api/book/get-book-by-id/${bookId}`
       );
       const productData = productResponse?.data;
       setProduct(productData);

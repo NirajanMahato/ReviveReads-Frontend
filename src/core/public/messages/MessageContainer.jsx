@@ -24,7 +24,7 @@ const MessageContainer = () => {
                 <div className="w-9 rounded-full">
                   <img
                     alt="Tailwind CSS chat bubble component"
-                    src={`http://localhost:5000/product_images/${selectedConversation.avatar}`}
+                    src={`/api/product_images/${selectedConversation.avatar}`}
                   />
                 </div>
               </div>

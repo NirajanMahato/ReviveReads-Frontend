@@ -10,10 +10,7 @@ const useLogin = () => {
 
   const login = async (data) => {
     try {
-      const response = await axios.post(
-        "http://localhost:5000/user/sign-in",
-        data
-      );
+      const response = await axios.post("/api/user/sign-in", data);
 
       // Save user data in Redux and localStorage
       dispatch(authActions.login());

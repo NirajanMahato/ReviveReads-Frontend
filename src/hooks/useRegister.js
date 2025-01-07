@@ -10,10 +10,7 @@ const useRegister = () => {
   const registerUser = async (data) => {
     setLoading(true);
     try {
-      const response = await axios.post(
-        "http://localhost:5000/user/sign-up",
-        data
-      );
+      const response = await axios.post("/api/user/sign-up", data);
       toast.success(response.data.message);
       navigate("/Login");
     } catch (error) {

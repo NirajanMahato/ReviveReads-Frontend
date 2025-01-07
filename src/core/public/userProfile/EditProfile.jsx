@@ -16,8 +16,8 @@ const EditProfile = ({ onClose }) => {
 
   const [previewImage, setPreviewImage] = useState(
     userInfo?.avatar
-      ? `http://localhost:5000/product_images/${userInfo.avatar}`
-      : "http://localhost:5000/product_images/default_avatar.png"
+      ? `/api/product_images/${userInfo.avatar}`
+      : "/api/product_images/default_avatar.png"
   );
 
   // Create a reference for the file input
@@ -62,11 +62,7 @@ const EditProfile = ({ onClose }) => {
     }
 
     try {
-      const response = await axios.patch(
-        "http://localhost:5000/user",
-        formData,
-        { headers }
-      );
+      const response = await axios.patch("/api/user", formData, { headers });
 
       setUserInfo(response.data.data); // Update context with new user info
       toast.success("Profile updated successfully");

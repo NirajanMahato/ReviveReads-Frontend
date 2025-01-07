@@ -26,15 +26,12 @@ const AdPostsCard = ({ userId }) => {
     if (!confirmDelete) return;
 
     try {
-      const response = await axios.delete(
-        "http://localhost:5000/book/delete-book",
-        {
-          headers: {
-            bookid: bookId,
-            authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await axios.delete("/api/book/delete-book", {
+        headers: {
+          bookid: bookId,
+          authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       toast.success(response.data.message);
 
       const updatedProducts = allBooks.filter(
@@ -85,7 +82,7 @@ const AdPostsCard = ({ userId }) => {
             >
               <Link>
                 <img
-                  src={`http://localhost:5000/product_images/${product?.images[0]}`}
+                  src={`/api/product_images/${product?.images[0]}`}
                   alt={product.title}
                   className="rounded-lg lg:w-36 md:w-40 w-32 md:h-44 h-36 object-cover"
                 />

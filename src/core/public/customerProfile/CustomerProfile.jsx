@@ -20,7 +20,7 @@ const CustomerProfile = () => {
     const fetchUserInfo = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/user/get-user-by-id/${userId}` // Adjust endpoint
+          `/api/user/get-user-by-id/${userId}` // Adjust endpoint
         );
         setUserInfo(response.data);
       } catch (err) {
@@ -55,8 +55,8 @@ const CustomerProfile = () => {
             <img
               src={
                 userInfo?.avatar
-                  ? `http://localhost:5000/product_images/${userInfo.avatar}`
-                  : "http://localhost:5000/product_images/default_avatar.png"
+                  ? `/api/product_images/${userInfo.avatar}`
+                  : "/api/product_images/default_avatar.png"
               }
               alt="user"
               className="md:w-24 md:h-24 w-20 h-20 object-cover rounded-full"

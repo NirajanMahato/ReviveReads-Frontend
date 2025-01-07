@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import useConversation from "../zustand/useConverstaion";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import useConversation from "../zustand/useConverstaion";
 
 const useGetMessages = () => {
   const [loading, setLoading] = useState(false);
@@ -11,11 +11,13 @@ const useGetMessages = () => {
     const getMessages = async () => {
       setLoading(true);
       try {
-        const res = await axios(`http://localhost:5000/messages/${selectedConversation._id}`,{headers: {
+        const res = await axios(`/api/messages/${selectedConversation._id}`, {
+          headers: {
             authorization: `Bearer ${localStorage.getItem("token")}`,
-        }});
+          },
+        });
         const data = await res.data;
-        if(data.error) throw new Error(data.error);
+        if (data.error) throw new Error(data.error);
         setMessages(data);
       } catch (error) {
         toast.error(error.message);
@@ -24,12 +26,10 @@ const useGetMessages = () => {
       }
     };
 
-    if(selectedConversation?._id) getMessages();
+    if (selectedConversation?._id) getMessages();
+  }, [selectedConversation?._id, setMessages]);
 
-    
-  }, [selectedConversation?._id,setMessages]);
-
-  return {messages, loading}
+  return { messages, loading };
 };
 
 export default useGetMessages;

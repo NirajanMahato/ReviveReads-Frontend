@@ -13,14 +13,11 @@ const SaveListsCard = () => {
   useEffect(() => {
     const fetchSavedBooks = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/user/get-favorites-books",
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
+        const response = await axios.get("/api/user/get-favorites-books", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
         setSavedBooks(response.data);
       } catch (error) {
         console.error("Error fetching saved books:", error);
@@ -33,7 +30,7 @@ const SaveListsCard = () => {
   const handleRemoveSavedBook = async (bookId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/user/remove-from-favorites/${bookId}`,
+        `/api/user/remove-from-favorites/${bookId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -57,7 +54,7 @@ const SaveListsCard = () => {
         >
           <Link to={`/products/${product?._id}`}>
             <img
-              src={`http://localhost:5000/product_images/${product?.images[0]}`}
+              src={`/api/product_images/${product?.images[0]}`}
               alt={product.title}
               className="rounded-lg lg:w-36 md:w-40 w-32 md:h-44 h-36 object-cover hover:scale-105 transition-all delay-75 hover:cursor-pointer"
             />

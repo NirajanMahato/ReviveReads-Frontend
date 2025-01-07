@@ -8,14 +8,11 @@ const useUserBooks = (userId) => {
   const fetchBooks = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        "http://localhost:5000/book/get-book-by-user",
-        {
-          headers: {
-            id: userId,
-          },
-        }
-      );
+      const response = await axios.get("/api/book/get-book-by-user", {
+        headers: {
+          id: userId,
+        },
+      });
       setAllBooks(response.data);
     } catch (error) {
       console.error("Error fetching books:", error);

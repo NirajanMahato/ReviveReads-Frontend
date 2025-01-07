@@ -5,7 +5,7 @@ const Conversation = ({ conversation, lastIdx }) => {
   const { selectedConversation, setSelectedConversation } = useConversation();
   const isSelected = selectedConversation?._id === conversation._id;
 
-  const {onlineUsers} = useSocketContext();
+  const { onlineUsers } = useSocketContext();
   const isOnline = onlineUsers.includes(conversation._id);
 
   return (
@@ -16,10 +16,10 @@ const Conversation = ({ conversation, lastIdx }) => {
 			`}
         onClick={() => setSelectedConversation(conversation)}
       >
-        <div className={`avatar ${isOnline? "online" : ""}`}>
+        <div className={`avatar ${isOnline ? "online" : ""}`}>
           <div className="w-9 rounded-full">
             <img
-              src={`http://localhost:5000/product_images/${conversation.avatar}`}
+              src={`/api/product_images/${conversation.avatar}`}
               alt="user avatar"
             />
           </div>
