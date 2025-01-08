@@ -2,11 +2,12 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { LuSearch } from "react-icons/lu";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import UserMenu from "./UserMenu";
 import logo1 from "/Logos/Logo1.png";
 import logo2 from "/Logos/Logo2.png";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const [products, setProducts] = useState([]);
@@ -15,6 +16,7 @@ const Navbar = () => {
 
   // Access user info from context
   const { userInfo, loading } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
@@ -23,9 +25,7 @@ const Navbar = () => {
   useEffect(() => {
     const fetchbooks = async () => {
       try {
-        const response = await axios.get(
-          "/api/book/get-approved-books"
-        );
+        const response = await axios.get("/api/book/get-approved-books");
         setProducts(response?.data);
       } catch (error) {
         console.error("Error fetching books:", error);
@@ -37,6 +37,15 @@ const Navbar = () => {
   const filteredBooks = products.filter((product) =>
     product.title.toLowerCase().includes(search.toLowerCase())
   );
+
+  // Function to handle notification button click
+  const handleNotificationClick = () => {
+    if (!userInfo) {
+      toast.error('Pleasr Login to continue')
+    } else {
+      navigate("/messages");
+    }
+  };
 
   return (
     <div className="relative w-full">
@@ -81,7 +90,7 @@ const Navbar = () => {
             </div>
           </div>
           <div className="md:flex hidden items-center">
-            <button className="ml-5">
+            <button onClick={handleNotificationClick} className="ml-5">
               <IoNotificationsOutline className="text-2xl text-gray-600 hover:text-black" />
             </button>
             <span className="border-l-2 border-gray-400 rounded-full h-7 ml-2"></span>
@@ -113,7 +122,6 @@ const Navbar = () => {
           </ul>
         </div>
       )}
-
     </div>
   );
 };

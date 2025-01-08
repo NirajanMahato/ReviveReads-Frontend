@@ -1,36 +1,36 @@
 import axios from "axios";
 import { formatDistanceToNowStrict } from "date-fns";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { MdOutlineBookmarkAdd } from "react-icons/md";
 import { RiMessage3Line } from "react-icons/ri";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useConversation from "../../../zustand/useConverstaion";
+import ChatModal from "./ChatModal";
 
 const BookCard = ({ products, userId }) => {
   const authenticateToken = localStorage.getItem("token");
-  const { selectedConversation, setSelectedConversation } = useConversation();
+  const [isChatOpen, setIsChatOpen] = useState(false); // Modal visibility state
+  const { setSelectedConversation } = useConversation();
 
-  const navigate = useNavigate();
-
-  const handleChatNow = async (chatUserId) => {
+  // Handle opening the chat modal
+  const handleChatNow = async (seller) => {
     if (authenticateToken) {
       try {
-        // Fetch seller details using the seller ID
-        const res = await axios.get(
-          `/api/user/get-user-by-id/${chatUserId}` // Adjust endpoint
-        );
-
-        // Set the selected conversation with the fetched user data
+        const res = await axios.get(`/api/user/get-user-by-id/${seller}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        console.log(res.data);
         setSelectedConversation(res.data);
-
-        // Navigate to the messages page
-        navigate("/messages");
       } catch (error) {
         const errorMessage = error.response
           ? error.response.data.error
           : error.message;
         toast.error(errorMessage);
       }
+      setIsChatOpen(true); // Open modal
     } else {
       toast.error("Please login to chat with the seller.");
     }
@@ -142,6 +142,13 @@ const BookCard = ({ products, userId }) => {
           </div>
         </div>
       ))}
+      {/* Chat Modal */}
+      <ChatModal
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        // sellerId={product?.seller?._id}
+        // sellerName={product?.seller?.name}
+      />
     </div>
   );
 };

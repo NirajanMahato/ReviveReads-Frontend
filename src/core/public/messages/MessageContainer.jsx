@@ -34,7 +34,9 @@ const MessageContainer = () => {
             </div>
           </div>
           <Messages />
-          <MessageInput />
+          <div className="md:px-8 px-4 my-3 md:pb-3 pb-1">
+            <MessageInput />
+          </div>
         </>
       )}
     </div>
