@@ -5,8 +5,10 @@ import toast from "react-hot-toast";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FaEdit } from "react-icons/fa";
 import { LuSearch } from "react-icons/lu";
+import { MdOutlineSell } from "react-icons/md";
 import { Link } from "react-router-dom";
 import useUserBooks from "../../../hooks/useUserBooks";
+import AddBookModal from "../homePage/AddBookModal";
 import notAvailable from "/BG/notAvailable.svg";
 
 const AdPostsCard = ({ userId }) => {
@@ -44,6 +46,27 @@ const AdPostsCard = ({ userId }) => {
     }
   };
 
+  const handleMarkAsSold = async (bookId) => {
+    const confirmSold = window.confirm(
+      "Are you sure you want mark sold to this book?"
+    );
+    if (!confirmSold) return;
+    try {
+      const response = await axios.patch(
+        `/api/book/mark-as-sold/${bookId}`,
+        {},
+        {
+          headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      toast.success("Book marked as sold successfully!");
+    } catch (error) {
+      toast.error(
+        error.response.data.message || "Failed to mark book as sold."
+      );
+    }
+  };
+
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
@@ -52,6 +75,16 @@ const AdPostsCard = ({ userId }) => {
       product.title.toLowerCase().includes(query)
     );
     setFilteredProducts(filtered); // Update filtered results
+  };
+
+  const [showModal, setShowModal] = useState(false);
+
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
   };
 
   return (
@@ -132,17 +165,24 @@ const AdPostsCard = ({ userId }) => {
                     {product?.status}
                   </h1>
                 </div>
-                <div className="flex md:mt-3 mt-2 text-gray-600">
-                  <button className="flex items-center w-1/2 hover:text-green-700">
+                <div className="flex justify-between md:mt-3 mt-2 text-gray-600">
+                  <button className="flex items-center hover:text-green-700">
                     <FaEdit className="md:text-lg" />
                     <h1 className="text-sm pl-1">Edit</h1>
                   </button>
                   <button
                     onClick={() => deleteBook(product?._id)}
-                    className="flex items-center w-1/2 hover:text-red-700"
+                    className="flex items-center hover:text-red-700"
                   >
                     <AiOutlineDelete className="md:text-xl" />
                     <h1 className="text-sm">Delete</h1>
+                  </button>
+                  <button
+                    onClick={() => handleMarkAsSold(product?._id)}
+                    className="flex items-center hover:text-yellow-700"
+                  >
+                    <MdOutlineSell className="md:text-lg" />
+                    <h1 className="text-sm pl-1">Sold</h1>
                   </button>
                 </div>
               </div>
@@ -160,15 +200,17 @@ const AdPostsCard = ({ userId }) => {
               <p className="text-gray-500 mb-4">
                 Start selling by posting your first ad
               </p>
-              <Link to="/post-ad">
-                <button className="bg-gray-800 text-white px-4 py-2 rounded-md">
-                  Post New Ad
-                </button>
-              </Link>
+              <button
+                onClick={openModal}
+                className="bg-gray-800 text-white px-4 py-2 rounded-md"
+              >
+                Post New Ad
+              </button>
             </div>
           </div>
         )}
       </div>
+      <AddBookModal showModal={showModal} closeModal={closeModal} />
     </div>
   );
 };

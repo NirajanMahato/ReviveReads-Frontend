@@ -7,6 +7,7 @@ import AdPostsCard from "./AdPostsCard";
 import AnalyticsCard from "./AnalyticsCard";
 import EditProfile from "./EditProfile";
 import SaveListsCard from "./SaveListsCard";
+import SoldCard from "./SoldCard";
 
 const UserProfile = () => {
   const { userInfo, loading } = useContext(UserContext);
@@ -25,6 +26,7 @@ const UserProfile = () => {
       label: "Ad Posts",
       component: <AdPostsCard userId={userInfo?._id} />,
     },
+    { id: "sold", label: "Sold", component: <SoldCard /> },
     { id: "analytics", label: "Analytics", component: <AnalyticsCard /> },
     { id: "saveLists", label: "Save Lists", component: <SaveListsCard /> },
   ];
@@ -83,13 +85,13 @@ const UserProfile = () => {
 
         <div className="md:w-3/4 shadow rounded-lg pb-4">
           <div className="border-b">
-            <ul className="xl:w-2/5 lg:w-3/5 flex items-center justify-between md:px-6 px-3 py-4 font-gilroy">
+            <ul className="flex items-center gap-3 md:px-6 px-3 py-4 font-gilroy">
               {tabs.map((tab) => (
                 <li
                   key={tab.id}
-                  className={`cursor-pointer border rounded-3xl px-3 py-1 ${
+                  className={`cursor-pointer border rounded-3xl flex justify-center w-24 py-1.5 ${
                     activeTab === tab.id
-                      ? "font-semibold text-white bg-gray-700 shadow-md"
+                      ? "font-semibold text-white bg-gray-700 shadow-md border-gray-700"
                       : "border-gray-500"
                   }`}
                   onClick={() => setActiveTab(tab.id)}

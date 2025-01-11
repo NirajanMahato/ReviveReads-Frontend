@@ -5,6 +5,7 @@ const useApprovedBooks = () => {
   const [allBooks, setAllBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [selectedGenre, setSelectedGenre] = useState("All"); // New state for genre
 
   const fetchBooks = async () => {
     setLoading(true);
@@ -21,29 +22,45 @@ const useApprovedBooks = () => {
     }
   };
 
-  const filterBooks = (tab) => {
-    let filtered = [];
+  const filterBooks = (tab, genre = selectedGenre) => {
+    let filtered = [...allBooks];
 
+    // Tab-based filtering
     if (tab === "New Listings") {
-      filtered = [...allBooks].sort(
+      filtered = filtered.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
     } else if (tab === "Recommended") {
-      filtered = allBooks
-        .sort((a, b) => a.price - b.price) // Sort by price
+      filtered = filtered
+        .sort((a, b) => a.price - b.price)
         .filter(
           (book) =>
             book.condition === "Like New" || book.condition === "Brand New"
         );
     }
+
+    // Genre-based filtering
+    if (genre !== "All") {
+      filtered = filtered.filter((book) => book.genre === genre);
+    }
+
     setFilteredBooks(filtered);
+    setSelectedGenre(genre); // Update the selected genre state
   };
 
   useEffect(() => {
     fetchBooks();
   }, []);
 
-  return { allBooks, setAllBooks, filteredBooks, filterBooks, loading };
+  return {
+    allBooks,
+    setAllBooks,
+    filteredBooks,
+    filterBooks,
+    loading,
+    selectedGenre,
+    setSelectedGenre,
+  };
 };
 
 export default useApprovedBooks;
