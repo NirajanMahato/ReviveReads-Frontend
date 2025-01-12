@@ -43,7 +43,7 @@ const Navbar = () => {
     if (!userInfo) {
       toast.error('Pleasr Login to continue')
     } else {
-      navigate("/messages");
+      toast.error("Feature building")
     }
   };
 

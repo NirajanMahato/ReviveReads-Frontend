@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 const UserMenu = () => {
   const { userInfo, logout } = useContext(UserContext);
@@ -7,6 +7,8 @@ const UserMenu = () => {
   // Determine the profile link based on role
   const profileLink =
     userInfo?.role === "admin" ? "/admin/dashboard" : "/profile";
+  
+  const navigate = useNavigate();
 
   return (
     <div className="relative">
@@ -44,6 +46,9 @@ const UserMenu = () => {
                     ? "Admin Dashboard"
                     : "Visit Profile"}
                 </Link>
+              </li>
+              <li onClick={() => {navigate('/messages')}} className="">
+                <a>messages</a>
               </li>
               <li onClick={logout} className="text-red-500">
                 <a>Logout</a>
