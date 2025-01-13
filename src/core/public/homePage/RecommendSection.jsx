@@ -56,7 +56,7 @@ const RecommendSection = ({ activeTab, setActiveTab }) => {
           </button>
         </div>
         <select
-          className="select select-bordered w-48 max-w-xs font-gilroyMedium"
+          className="select select-bordered md:w-48 max-w-xs font-gilroyMedium"
           value={selectedGenre}
           onChange={handleGenreChange}
         >

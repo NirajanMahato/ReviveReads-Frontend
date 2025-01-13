@@ -2,10 +2,10 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
 import LoadingScreen from "./components/LoadingScreen";
+import { NotificationProvider } from "./context/NotificationContext";
 import { SocketContextProvider } from "./context/SocketContext";
 import { UserProvider } from "./context/UserContext";
 import { authActions } from "./store/auth";
-import BookListings from "./core/private/bookListings";
 
 // Lazy-loaded components
 const Home = lazy(() => import("./core/public/homePage/Home"));
@@ -13,6 +13,7 @@ const Layout = lazy(() => import("./core/private/Layout"));
 const ErrorPage = lazy(() => import("./core/public/errorPage/ErrorPage"));
 const DashboardIndex = lazy(() => import("./core/private/dashboard"));
 const UserIndex = lazy(() => import("./core/private/user"));
+const BookListings = lazy(() => import("./core/private/bookListings"));
 const LoginPage = lazy(() =>
   import("./core/public/loginAndRegister/loginPage")
 );
@@ -23,9 +24,12 @@ const ProductDetails = lazy(() =>
   import("./core/public/productDetails/ProductDetails")
 );
 const UserProfile = lazy(() => import("./core/public/userProfile/UserProfile"));
-const MessagePage  = lazy(() => import("./core/public/messages/MessagePage"));
+const MessagePage = lazy(() => import("./core/public/messages/MessagePage"));
 const CustomerProfile = lazy(() =>
   import("./core/public/customerProfile/CustomerProfile")
+);
+const NotificationsPage = lazy(() =>
+  import("./core/public/notifications/NotificationsPage")
 );
 
 function App() {
@@ -56,49 +60,63 @@ function App() {
     <Suspense fallback={<LoadingScreen />}>
       <UserProvider>
         <SocketContextProvider>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<Home />} />
-            <Route
-              path="/login"
-              element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}
-            />
-            <Route
-              path="/signup"
-              element={isAuthenticated ? <Navigate to="/" /> : <RegisterPage />}
-            />
-            <Route path="/products/:bookId" element={<ProductDetails />} />
-            <Route
-              path="/customerprofile/:userId"
-              element={<CustomerProfile />}
-            />
-            <Route path="/error" element={<ErrorPage />} />
+          <NotificationProvider>
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<Home />} />
+              <Route
+                path="/login"
+                element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}
+              />
+              <Route
+                path="/signup"
+                element={
+                  isAuthenticated ? <Navigate to="/" /> : <RegisterPage />
+                }
+              />
+              <Route path="/products/:bookId" element={<ProductDetails />} />
+              <Route
+                path="/customerprofile/:userId"
+                element={<CustomerProfile />}
+              />
+              <Route path="/error" element={<ErrorPage />} />
 
-            {/* Authenticated Routes - Accessible if User is Authenticated */}
-            <Route
-              path="/messages"
-              element={isAuthenticated ? <MessagePage /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/profile"
-              element={isAuthenticated ? <UserProfile /> : <Navigate to="/" />}
-            />
+              {/* Authenticated Routes - Accessible if User is Authenticated */}
+              <Route
+                path="/messages"
+                element={
+                  isAuthenticated ? <MessagePage /> : <Navigate to="/" />
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  isAuthenticated ? <UserProfile /> : <Navigate to="/" />
+                }
+              />
 
-            {/* Private Routes - Only accessible if authenticated and role is 'admin' */}
-            {isAuthenticated && role === "admin" ? (
-              <Route path="/admin" element={<Layout />}>
-                <Route index element={<Navigate to="dashboard" />} />
-                <Route path="dashboard" element={<DashboardIndex />} />
-                <Route path="users" element={<UserIndex />} />
-                <Route path="booklistings" element={<BookListings />} />
-              </Route>
-            ) : (
-              <Route path="/admin/*" element={<Navigate to="/login" />} />
-            )}
+              <Route
+                path="/notifications"
+                element={
+                  isAuthenticated ? <NotificationsPage /> : <Navigate to="/" />
+                }
+              />
+              {/* Private Routes - Only accessible if authenticated and role is 'admin' */}
+              {isAuthenticated && role === "admin" ? (
+                <Route path="/admin" element={<Layout />}>
+                  <Route index element={<Navigate to="dashboard" />} />
+                  <Route path="dashboard" element={<DashboardIndex />} />
+                  <Route path="users" element={<UserIndex />} />
+                  <Route path="booklistings" element={<BookListings />} />
+                </Route>
+              ) : (
+                <Route path="/admin/*" element={<Navigate to="/login" />} />
+              )}
 
-            {/* Catch-All Route for 404 Errors */}
-            <Route path="*" element={<ErrorPage />} />
-          </Routes>
+              {/* Catch-All Route for 404 Errors */}
+              <Route path="*" element={<ErrorPage />} />
+            </Routes>
+          </NotificationProvider>
         </SocketContextProvider>
       </UserProvider>
     </Suspense>

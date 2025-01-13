@@ -202,7 +202,7 @@ const BookListings = () => {
               />
               <LuSearch className="text-xl text-gray-500" />
             </div>
-            <div className="w-full grid gap-4 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
+            <div className="w-full grid gap-4 grid-cols-1 lg:grid-cols-3 xl:grid-cols-3">
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}

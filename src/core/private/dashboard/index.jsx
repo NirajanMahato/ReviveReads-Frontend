@@ -20,6 +20,7 @@ import {
   FaUserPlus,
 } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import useDashboardSummary from "../../../hooks/useDashboardSummary";
 import useFetchUsers from "../../../hooks/useFetchUsers";
 import DataTable from "../../../shared/DataTable/DataTable";
 
@@ -35,36 +36,32 @@ ChartJS.register(
 );
 
 const Dashboard = () => {
-  // Data for Summary Cards
+  const { summary } = useDashboardSummary();
+  const { users, loading } = useFetchUsers();
+
   const summaryCards = [
     {
       id: 1,
-      value: "Rs 25,875",
-      label: "Total Sales",
+      value: summary.totalBooksCount,
+      label: "Total Listings",
       bgColor: "bg-red-100",
-      icon: <FaSackDollar />,
+      icon: <FaCartShopping />,
       iconBgColor: "bg-red-500",
+      link: "/admin/booklistings",
     },
     {
       id: 2,
-      value: "300",
-      label: "Total Listings",
+      value: summary.booksPending,
+      label: "Books pending",
       bgColor: "bg-yellow-100",
-      icon: <FaCartShopping />,
+      icon: <FaSackDollar />,
       iconBgColor: "bg-yellow-500",
       link: "/admin/booklistings",
+      showDot: summary.booksPending > 0,
     },
-    // {
-    //   id: 3,
-    //   value: "120",
-    //   label: "Books Delivered",
-    //   bgColor: "bg-blue-100",
-    //   icon: <FaBox />,
-    //   iconBgColor: "bg-blue-500",
-    // },
     {
-      id: 4,
-      value: "45",
+      id: 3,
+      value: summary.newUsersCount,
       label: "New Users",
       bgColor: "bg-purple-100",
       icon: <FaUserPlus />,
@@ -72,8 +69,8 @@ const Dashboard = () => {
       link: "/admin/users",
     },
     {
-      id: 5,
-      value: 5, // This will dynamically be calculated
+      id: 4,
+      value: summary.newBooksCount,
       label: "New Books Added",
       bgColor: "bg-green-100",
       icon: <FaBook />, // You can use any relevant icon here
@@ -125,7 +122,6 @@ const Dashboard = () => {
     ],
   };
 
-  const { users, loading } = useFetchUsers();
   const recentUsers = users
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 3);
@@ -207,11 +203,15 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl px-6 pt-3 pb-6 mt-4">
             <h1 className=" font-bold text-lg">Sales summary</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mt-3">
-              {summaryCards.map((card) => (
+            {summaryCards.map((card) => (
                 <Link key={card.id} to={card.link}>
                   <div
-                    className={`p-4 flex items-center gap-3 rounded-lg shadow cursor-pointer hover:shadow-lg ${card.bgColor}`}
+                    className={`relative px-3 py-4 flex items-center gap-3 rounded-lg shadow cursor-pointer hover:shadow-lg ${card.bgColor}`}
                   >
+                    {/* Dot Indicator */}
+                    {card.showDot && (
+                      <span className="absolute top-2 right-2 w-2 h-2 bg-orange-600 rounded-full"></span>
+                    )}
                     <div
                       className={`text-lg text-white w-9 h-10 flex items-center justify-center rounded-lg ${card.iconBgColor}`}
                     >

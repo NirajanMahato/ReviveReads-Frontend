@@ -90,7 +90,6 @@ const AddBookModal = ({ showModal, closeModal }) => {
         images: [],
       });
       closeModal();
-      window.location.reload();
     } catch (error) {
       console.error(error);
       toast.error(error.response.data.message);
