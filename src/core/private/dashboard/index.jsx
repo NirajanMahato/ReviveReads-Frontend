@@ -10,16 +10,13 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
+import { format } from "date-fns";
 import React from "react";
 import { Bar, Line } from "react-chartjs-2";
-import { FaBook, FaEdit } from "react-icons/fa";
-import {
-  FaCartShopping,
-  FaSackDollar,
-  FaTrash,
-  FaUserPlus,
-} from "react-icons/fa6";
+import { FaBook } from "react-icons/fa";
+import { FaCartShopping, FaSackDollar, FaUserPlus } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import useDashboardGraphs from "../../../hooks/useDashboardGraphs";
 import useDashboardSummary from "../../../hooks/useDashboardSummary";
 import useFetchUsers from "../../../hooks/useFetchUsers";
 import DataTable from "../../../shared/DataTable/DataTable";
@@ -38,6 +35,36 @@ ChartJS.register(
 const Dashboard = () => {
   const { summary } = useDashboardSummary();
   const { users, loading } = useFetchUsers();
+
+  const { bookListingsData, userActivityData } = useDashboardGraphs();
+
+  // Format data for the Book Listings graph
+  const bookListingsGraphData = {
+    labels: bookListingsData.map((item) => `Week ${item._id}`), // X-axis: Weeks
+    datasets: [
+      {
+        label: "Books Listed",
+        data: bookListingsData.map((item) => item.count), // Y-axis: Counts
+        backgroundColor: "rgba(54, 162, 235, 0.6)",
+        borderColor: "rgba(54, 162, 235, 1)",
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  // Format data for the User Activity graph
+  const userActivityGraphData = {
+    labels: userActivityData.map((item) => `Week ${item._id}`), // X-axis: Weeks
+    datasets: [
+      {
+        label: "Active Users",
+        data: userActivityData.map((item) => item.count), // Y-axis: Counts
+        backgroundColor: "rgba(75, 192, 192, 0.6)",
+        borderColor: "rgba(75, 192, 192, 1)",
+        borderWidth: 1,
+      },
+    ],
+  };
 
   const summaryCards = [
     {
@@ -78,49 +105,6 @@ const Dashboard = () => {
       link: "/admin/booklistings",
     },
   ];
-
-  // Data for Charts
-  const revenueData = {
-    labels: [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ],
-    datasets: [
-      {
-        label: "Online Sales",
-        data: [15000, 18000, 25000, 16000, 14000, 19000, 22000],
-        backgroundColor: "#0095FF",
-      },
-      {
-        label: "Offline Sales",
-        data: [12000, 14000, 21000, 8000, 11000, 15000, 10000],
-        backgroundColor: "#10B981",
-      },
-    ],
-  };
-
-  const customerSatisfactionData = {
-    labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
-    datasets: [
-      {
-        label: "Last Month",
-        data: [1000000, 1100000, 1050000, 1200000],
-        borderColor: "#6366F1",
-        fill: false,
-      },
-      {
-        label: "This Month",
-        data: [1100000, 1150000, 1120000, 1250000],
-        borderColor: "#10B981",
-        fill: false,
-      },
-    ],
-  };
 
   const recentUsers = users
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -175,21 +159,12 @@ const Dashboard = () => {
     }),
     columnHelper.accessor("lastActivity", {
       header: "Last Activity",
-      cell: (info) => info.getValue() || "N/A",
-    }),
-    columnHelper.display({
-      id: "actions",
-      header: "Actions",
-      cell: () => (
-        <div className="flex space-x-2">
-          <button className="text-blue-500 hover:text-blue-700">
-            <FaEdit />
-          </button>
-          <button className="text-red-500 hover:text-red-700">
-            <FaTrash />
-          </button>
-        </div>
-      ),
+      cell: (info) => {
+        const lastActivity = info.getValue();
+        return lastActivity
+          ? format(new Date(lastActivity), "dd MMM yyyy, hh:mm a") // Example format: "14 Jan 2025, 03:30 PM"
+          : "N/A";
+      },
     }),
   ];
 
@@ -203,7 +178,7 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl px-6 pt-3 pb-6 mt-4">
             <h1 className=" font-bold text-lg">Sales summary</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mt-3">
-            {summaryCards.map((card) => (
+              {summaryCards.map((card) => (
                 <Link key={card.id} to={card.link}>
                   <div
                     className={`relative px-3 py-4 flex items-center gap-3 rounded-lg shadow cursor-pointer hover:shadow-lg ${card.bgColor}`}
@@ -232,16 +207,18 @@ const Dashboard = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-            <div className="bg-white px-6 py-4 rounded-lg shadow">
-              <h2 className="text-lg font-semibold mb-4">Total Revenue</h2>
-              <Bar data={revenueData} />
-            </div>
-
+            {/* Book Listings Over Time */}
             <div className="bg-white px-6 py-4 rounded-lg shadow">
               <h2 className="text-lg font-semibold mb-4">
-                Customer Satisfaction
+                Book Listings Over Time
               </h2>
-              <Line data={customerSatisfactionData} />
+              <Bar data={bookListingsGraphData} />
+            </div>
+
+            {/* User Activity */}
+            <div className="bg-white px-6 py-4 rounded-lg shadow">
+              <h2 className="text-lg font-semibold mb-4">User Activity</h2>
+              <Line data={userActivityGraphData} />
             </div>
           </div>
 

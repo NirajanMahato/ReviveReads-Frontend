@@ -84,20 +84,20 @@ const UsersPage = () => {
     }),
 
     // Actions column
-    columnHelper.display({
-      id: "actions",
-      header: "Actions",
-      cell: () => (
-        <div className="flex space-x-2">
-          <button className="text-blue-500 hover:text-blue-700 mr-3">
-            <FaEdit />
-          </button>
-          <button className="text-red-500 hover:text-red-700">
-            <FaTrash />
-          </button>
-        </div>
-      ),
-    }),
+    // columnHelper.display({
+    //   id: "actions",
+    //   header: "Actions",
+    //   cell: () => (
+    //     <div className="flex space-x-2">
+    //       <button className="text-blue-500 hover:text-blue-700 mr-3">
+    //         <FaEdit />
+    //       </button>
+    //       <button className="text-red-500 hover:text-red-700">
+    //         <FaTrash />
+    //       </button>
+    //     </div>
+    //   ),
+    // }),
   ];
 
   return (
@@ -109,12 +109,6 @@ const UsersPage = () => {
       ) : (
         <div className="bg-white shadow rounded-lg p-4 mt-4">
           <DataTable columns={columns} data={users} />
-
-          <div className="mt-6">
-            <button className="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800">
-              Add User
-            </button>
-          </div>
         </div>
       )}
     </div>

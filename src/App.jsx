@@ -6,6 +6,8 @@ import { NotificationProvider } from "./context/NotificationContext";
 import { SocketContextProvider } from "./context/SocketContext";
 import { UserProvider } from "./context/UserContext";
 import { authActions } from "./store/auth";
+import Settings from "./core/private/settings";
+import useUpdateUserStatus from "./hooks/useUpdateUserStatus";
 
 // Lazy-loaded components
 const Home = lazy(() => import("./core/public/homePage/Home"));
@@ -35,6 +37,7 @@ const NotificationsPage = lazy(() =>
 function App() {
   const dispatch = useDispatch();
   const { isAuthenticated, role } = useSelector((state) => state.auth);
+  useUpdateUserStatus();
 
   const [loading, setLoading] = useState(true);
 
@@ -108,6 +111,7 @@ function App() {
                   <Route path="dashboard" element={<DashboardIndex />} />
                   <Route path="users" element={<UserIndex />} />
                   <Route path="booklistings" element={<BookListings />} />
+                  <Route path="settings" element={<Settings />} />
                 </Route>
               ) : (
                 <Route path="/admin/*" element={<Navigate to="/login" />} />
