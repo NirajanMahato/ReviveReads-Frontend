@@ -5,14 +5,25 @@ import { GoClockFill } from "react-icons/go";
 import { MdLocalShipping, MdOutlineBookmarkAdd } from "react-icons/md";
 import { RiMessage3Line } from "react-icons/ri";
 import { useNavigate, useParams } from "react-router-dom";
+import { handleChatNow, handleSaveBook } from "../../../hooks/bookActions";
 import map from "/BG/map.png";
 
 import Navbar from "../../../components/Navbar";
 import useProductDetails from "../../../hooks/useProductDetails";
+import ChatModal from "../homePage/ChatModal";
 
 const ProductDetails = () => {
   const { bookId } = useParams();
   const { product, loading, error } = useProductDetails(bookId);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
+  const authenticateToken = localStorage.getItem("token");
+  const handleOpenChatModal = async (sellerId) => {
+    const chatReady = await handleChatNow(sellerId, authenticateToken);
+    if (chatReady) {
+      setIsChatOpen(true); // Open modal only if chat setup is successful
+    }
+  };
 
   const navigate = useNavigate();
 
@@ -128,11 +139,17 @@ const ProductDetails = () => {
           </div>
 
           <div className="flex items-center space-x-4 mt-6 lg:pr-14">
-            <button className="rounded-lg shadow-lg flex items-center justify-center w-1/2 bg-black hover:bg-gray-800 text-white py-3">
+            <button
+              onClick={() => handleSaveBook(product?._id, authenticateToken)}
+              className="rounded-lg shadow-lg flex items-center justify-center w-1/2 bg-black hover:bg-gray-800 text-white py-3"
+            >
               <MdOutlineBookmarkAdd className="md:text-xl  mr-1" />
               Save
             </button>
-            <button className="rounded-lg shadow-lg flex items-center justify-center w-1/2 bg-green-700 hover:bg-green-800 text-white py-3">
+            <button
+              onClick={() => handleOpenChatModal(product?.seller?._id)}
+              className="rounded-lg shadow-lg flex items-center justify-center w-1/2 bg-green-700 hover:bg-green-800 text-white py-3"
+            >
               <RiMessage3Line className="md:text-xl  mr-1" />
               Chat Now
             </button>
@@ -205,6 +222,7 @@ const ProductDetails = () => {
             </div>
           )}
         </div>
+        <ChatModal isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
       </div>
     </>
   );

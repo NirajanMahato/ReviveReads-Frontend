@@ -27,8 +27,8 @@ const UserProfile = () => {
       component: <AdPostsCard userId={userInfo?._id} />,
     },
     { id: "sold", label: "Sold", component: <SoldCard /> },
-    { id: "analytics", label: "Analytics", component: <AnalyticsCard /> },
     { id: "saveLists", label: "Save Lists", component: <SaveListsCard /> },
+    { id: "analytics", label: "Analytics", component: <AnalyticsCard /> },
   ];
 
   const toggleEditProfile = () => {

@@ -48,7 +48,7 @@ const UserMenu = () => {
                 </Link>
               </li>
               <li onClick={() => {navigate('/messages')}} className="">
-                <a>messages</a>
+                <a>Messages</a>
               </li>
               <li onClick={logout} className="text-red-500">
                 <a>Logout</a>

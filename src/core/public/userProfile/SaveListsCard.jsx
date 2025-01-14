@@ -50,16 +50,16 @@ const SaveListsCard = () => {
       {savedBooks.map((product) => (
         <div
           key={product?._id}
-          className="flex items-center gap-x-2 lg:w-96 border rounded-lg p-3 hover:shadow-lg hover:bg-blue-50 hover:bg-opacity-50 hover:border-gray-300 transition-all delay-75"
+          className="flex flex-col md:flex-row items-center max-w-96 border rounded-lg p-3 hover:shadow-lg hover:bg-blue-50 hover:bg-opacity-50 hover:border-gray-300 transition-all delay-75"
         >
           <Link to={`/products/${product?._id}`}>
             <img
               src={`/api/product_images/${product?.images[0]}`}
               alt={product.title}
-              className="rounded-lg lg:w-36 md:w-40 w-32 md:h-44 h-36 object-cover hover:scale-105 transition-all delay-75 hover:cursor-pointer"
+              className="w-full h-40 md:h-44 object-cover rounded-lg hover:scale-105 transition-all delay-75 hover:cursor-pointer"
             />
           </Link>
-          <div className="info-div flex flex-col px-2 pb-2">
+          <div className="info-div flex flex-col px-2 py-2 w-full">
             <div className="hover:cursor-pointer">
               <h1
                 className="font-gilroySemiBold md:text-lg "
@@ -68,7 +68,7 @@ const SaveListsCard = () => {
                 {product?.title}
               </h1>
               <h1
-                className="md:text-xs text-[10px] text-gray-600 mt-1 md:mb-0 mb-1"
+                className="md:text-xs text-[10px] text-gray-600 mt-1"
                 style={{ lineHeight: "1" }}
               >
                 {product.description.length > 50 // Adjust '50' for desired length

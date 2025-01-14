@@ -1,81 +1,53 @@
-import axios from "axios";
 import { formatDistanceToNowStrict } from "date-fns";
 import { useState } from "react";
-import toast from "react-hot-toast";
 import { MdOutlineBookmarkAdd } from "react-icons/md";
 import { RiMessage3Line } from "react-icons/ri";
-import { Link } from "react-router-dom";
-import useConversation from "../../../zustand/useConverstaion";
+import { Link, useLocation } from "react-router-dom";
+import { handleChatNow, handleSaveBook } from "../../../hooks/bookActions";
 import ChatModal from "./ChatModal";
 
-const BookCard = ({ products, userId }) => {
-  const authenticateToken = localStorage.getItem("token");
+const BookCard = ({ products }) => {
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const { setSelectedConversation } = useConversation();
+  const authenticateToken = localStorage.getItem("token");
+  const userId = localStorage.getItem("id");
 
-  // Handle opening the chat modal
-  const handleChatNow = async (seller) => {
-    if (authenticateToken) {
-      try {
-        const res = await axios.get(`/api/user/get-user-by-id/${seller}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        setSelectedConversation(res.data);
-      } catch (error) {
-        const errorMessage = error.response
-          ? error.response.data.error
-          : error.message;
-        toast.error(errorMessage);
-      }
-      setIsChatOpen(true); // Open modal
-    } else {
-      toast.error("Please login to chat with the seller.");
+  const handleOpenChatModal = async (sellerId) => {
+    const chatReady = await handleChatNow(sellerId, authenticateToken);
+    if (chatReady) {
+      setIsChatOpen(true); // Open modal only if chat setup is successful
     }
   };
 
-  const handleSaveBook = async (bookId) => {
-    if (authenticateToken) {
-      try {
-        const response = await axios.post(
-          "/api/user/add-to-favorites",
-          { bookId },
-          {
-            headers: {
-              Authorization: `Bearer ${authenticateToken}`,
-            },
-          }
-        );
-        toast.success(response.data.message);
-      } catch (error) {
-        toast.error(error.response.data.message);
-      }
-    } else {
-      toast.error("Please login to save the book.");
-    }
-  };
+  const location = useLocation();
+  const gridClasses =
+    location.pathname === "/"
+      ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+      : "grid-cols-1 xl:grid-cols-2 lg:px-8";
 
   return (
-    <div
-      className={`grid grid-cols-1 gap-x-10 md:gap-y-8 gap-y-5 mt-6 ${
-        userId
-          ? "grid-cols-1 xl:grid-cols-2 lg:px-8"
-          : "md:grid-cols-2 lg:grid-cols-3"
-      }`}
-    >
+    <div className={`grid gap-x-10 md:gap-y-8 gap-y-5 mt-6 ${gridClasses}`}>
       {products.map((product) => (
         <div
           key={product?._id}
           className="flex flex-col md:flex-row items-center max-w-96 border rounded-lg p-3 hover:shadow-lg hover:bg-blue-50 hover:bg-opacity-50 hover:border-gray-300 transition-all delay-75"
         >
-          <Link to={`/products/${product?._id}`} className=" md:w-44 w-full">
-            <img
-              src={`/api/product_images/${product?.images[0]}`}
-              alt={product.title}
-              className="w-full h-40 md:h-44 object-cover rounded-lg hover:scale-105 transition-all delay-75 hover:cursor-pointer"
-            />
-          </Link>
+          {product?.seller?._id !== userId ? (
+            <Link to={`/products/${product?._id}`} className="md:w-44 w-full">
+              <img
+                src={`/api/product_images/${product?.images[0]}`}
+                alt={product.title}
+                className="w-full h-40 md:h-44 object-cover rounded-lg hover:scale-105 transition-all delay-75 hover:cursor-pointer"
+              />
+            </Link>
+          ) : (
+            <div className="md:w-44 w-full">
+              <img
+                src={`/api/product_images/${product?.images[0]}`}
+                alt={product.title}
+                className="w-full h-40 md:h-44 object-cover rounded-lg"
+              />
+            </div>
+          )}
           <div className="info-div flex flex-col px-2 py-2 w-full">
             <div className="hover:cursor-pointer">
               <h1
@@ -113,7 +85,7 @@ const BookCard = ({ products, userId }) => {
                 {product?.condition}
               </h1>
             </div>
-            <div className="flex justify-between border-b pb-1 mt-2 text-gray-600 md:text-xs text-[10px]">
+            <div className="flex md:text-xs text-[11px] justify-between border-b md:pb-2 pb-1">
               <h1>{product.seller?.address}</h1>
               <h1>
                 {formatDistanceToNowStrict(new Date(product?.updatedAt))} ago
@@ -121,14 +93,16 @@ const BookCard = ({ products, userId }) => {
             </div>
             <div className="flex mt-3 justify-between text-gray-600">
               <button
-                onClick={() => handleSaveBook(product?._id)}
+                onClick={() => handleSaveBook(product?._id, authenticateToken)}
+                disabled={product?.seller?._id === userId}
                 className="flex items-center hover:text-yellow-600"
               >
                 <MdOutlineBookmarkAdd className="text-xl" />
                 <span className="text-sm ml-1">Save</span>
               </button>
               <button
-                onClick={() => handleChatNow(product?.seller?._id)}
+                onClick={() => handleOpenChatModal(product?.seller?._id)}
+                disabled={product?.seller?._id === userId}
                 className="flex items-center hover:text-green-700"
               >
                 <RiMessage3Line className="text-xl" />
@@ -138,7 +112,6 @@ const BookCard = ({ products, userId }) => {
           </div>
         </div>
       ))}
-      {/* Chat Modal */}
       <ChatModal isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
     </div>
   );
