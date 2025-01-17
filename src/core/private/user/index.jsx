@@ -7,7 +7,7 @@ import DataTable from "../../../shared/DataTable/DataTable";
 
 const UsersPage = () => {
   const { users, loading } = useFetchUsers();
-
+  
   const handleCopy = (id) => {
     navigator.clipboard.writeText(id).then(() => {
       toast.success("ID copied to clipboard!");
@@ -71,10 +71,31 @@ const UsersPage = () => {
       cell: (info) => info.getValue().length,
     }),
 
-    // Purchases count
-    columnHelper.accessor("purchases", {
-      header: "Purchases",
-      cell: (info) => info.getValue().length,
+    // Role
+    columnHelper.accessor("role", {
+      header: "Role",
+      cell: (info) => info.getValue(),
+    }),
+
+    // Status
+    columnHelper.accessor("status", {
+      header: "Status",
+      cell: (info) => {
+        const status = info.getValue();
+        return (
+          <span
+            className={`px-2 py-1 text-xs font-medium rounded-full ${
+              status === "Active"
+                ? "text-green-700 bg-green-100"
+                : status === "Away"
+                ? "text-yellow-700 bg-yellow-100"
+                : "text-red-700 bg-red-100"
+            }`}
+          >
+            {status}
+          </span>
+        );
+      },
     }),
 
     // Created At column

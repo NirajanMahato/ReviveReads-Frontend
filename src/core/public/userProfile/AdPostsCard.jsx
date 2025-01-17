@@ -137,7 +137,7 @@ const AdPostsCard = ({ userId }) => {
                       : product?.description}
                   </h1>
                 </div>
-                <div className="flex items-center justify-between md:mt-3 mt-11pr-2">
+                <div className="flex items-center justify-between md:mt-3 mt-11 pr-2">
                   <h1 className="font-gilroySemiBold text-gray-700 md:text-lg text-sm">
                     NPR {product?.price}
                   </h1>

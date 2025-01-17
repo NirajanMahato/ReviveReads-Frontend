@@ -89,7 +89,7 @@ const UserProfile = () => {
               {tabs.map((tab) => (
                 <li
                   key={tab.id}
-                  className={`cursor-pointer border rounded-3xl flex justify-center w-24 py-1.5 ${
+                  className={`cursor-pointer md:text-base text-sm border rounded-3xl flex justify-center w-24 py-1.5 ${
                     activeTab === tab.id
                       ? "font-semibold text-white bg-gray-700 shadow-md border-gray-700"
                       : "border-gray-500"

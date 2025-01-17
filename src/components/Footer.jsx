@@ -5,7 +5,7 @@ const Footer = () => {
     <>
       <div
         className={
-          "w-full md:h-44 h-0 gap-6 text-gray-900 flex items-center justify-end md:px-10 px-3"
+          "w-full md:flex hidden md:h-44 h-0 gap-6 text-gray-900 items-center justify-end md:px-10 px-3"
         }
         style={{
           background: "linear-gradient(to left,  #ffffff, #161617)",

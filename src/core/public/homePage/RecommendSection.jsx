@@ -32,7 +32,7 @@ const RecommendSection = ({ activeTab, setActiveTab }) => {
 
   return (
     <div className="md:px-8 px-4 lg:mt-0 md:mt-6 mt-10 pb-20">
-      <div className="flex justify-between">
+      <div className="flex md:flex-row flex-col gap-y-4 justify-between">
         <div>
           <button
             onClick={() => handleTabChange("Recommended")}
@@ -56,7 +56,7 @@ const RecommendSection = ({ activeTab, setActiveTab }) => {
           </button>
         </div>
         <select
-          className="select select-bordered md:w-48 max-w-xs font-gilroyMedium"
+          className="select select-bordered md:w-48 max-w-48 font-gilroyMedium"
           value={selectedGenre}
           onChange={handleGenreChange}
         >

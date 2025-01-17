@@ -1,11 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import io from "socket.io-client";
+import { UserContext } from "./UserContext";
 
 const NotificationContext = createContext();
 
 export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const userId = localStorage.getItem("id");
 
   const fetchNotifications = async () => {
     try {
@@ -30,9 +32,7 @@ export const NotificationProvider = ({ children }) => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      setNotifications((prev) =>
-        prev.map((n) => ({ ...n, isRead: true }))
-      );
+      setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
       setUnreadCount(0);
     } catch (error) {
       console.error("Error marking notifications as read:", error);
@@ -40,18 +40,20 @@ export const NotificationProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchNotifications();
+    if (userId) {
+      fetchNotifications();
 
-    const socket = io("http://localhost:5000", {
-      query: { userId: localStorage.getItem("id") },
-    });
+      const socket = io("http://localhost:5000", {
+        query: { userId: userId },
+      });
 
-    socket.on("newNotification", (notification) => {
-      setNotifications((prev) => [notification, ...prev]);
-      setUnreadCount((prev) => prev + 1);
-    });
+      socket.on("newNotification", (notification) => {
+        setNotifications((prev) => [notification, ...prev]);
+        setUnreadCount((prev) => prev + 1);
+      });
 
-    return () => socket.disconnect();
+      return () => socket.disconnect();
+    }
   }, []);
 
   return (

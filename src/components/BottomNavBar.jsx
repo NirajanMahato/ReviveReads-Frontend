@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { GoHome } from "react-icons/go";
-import { IoPersonCircleOutline } from "react-icons/io5";
-import { LuSearch } from "react-icons/lu";
+import { IoNotificationsOutline, IoPersonCircleOutline } from "react-icons/io5";
 import { RiMessage3Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { useNotifications } from "../context/NotificationContext";
+import { UserContext } from "../context/UserContext";
 
 const BottomNavBar = () => {
   const [active, setActive] = useState("home"); // Track the active tab
   const { isAuthenticated } = useSelector((state) => state.auth);
+  const { unreadCount } = useNotifications();
+  const { userInfo } = useContext(UserContext);
 
   const handleClick = (tab) => {
     setActive(tab);
@@ -28,27 +31,33 @@ const BottomNavBar = () => {
           </button>
         </Link>
 
-        <Link to={"/Search"}>
+        <Link to={"/notifications"}>
           <button
-            className={"flex flex-col items-center"}
-            onClick={() => handleClick("search")}
+            className={"flex relative flex-col items-center"}
+            onClick={() => handleClick("notifications")}
           >
-            <LuSearch
-              className={`text-2xl ${active === "search" ? "text-black" : ""}`}
+            <IoNotificationsOutline
+              className={`text-2xl ${active === "notifications" ? "text-black" : ""}`}
             />
+            {userInfo && unreadCount > 0 && (
+              <span className="absolute top-0 right-0 bg-red-400 text-white text-[8px] w-3 h-3 flex items-center justify-center rounded-full">
+                {unreadCount}
+              </span>
+            )}
+          </button>
+        </Link>
+        <Link to={"/messages"}>
+          <button
+            className={`flex flex-col items-center ${
+              active === "messages" ? "text-black" : ""
+            }`}
+            onClick={() => handleClick("messages")}
+          >
+            <RiMessage3Line className="text-2xl" />
           </button>
         </Link>
 
-        <button
-          className={`flex flex-col items-center ${
-            active === "add" ? "text-black" : ""
-          }`}
-          onClick={() => handleClick("add")}
-        >
-          <RiMessage3Line className="text-2xl" />
-        </button>
-
-        <Link to={isAuthenticated ? '/Profile' : '/Login' }>
+        <Link to={isAuthenticated ? "/Profile" : "/Login"}>
           <button
             className={`flex flex-col items-center ${
               active === "profile" ? "text-black" : ""
