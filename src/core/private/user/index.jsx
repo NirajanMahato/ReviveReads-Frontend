@@ -1,13 +1,23 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import React from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { FaEdit, FaTrash } from "react-icons/fa";
 import useFetchUsers from "../../../hooks/useFetchUsers";
 import DataTable from "../../../shared/DataTable/DataTable";
+import Pagination from "../../../shared/Pagination/Pagination";
 
 const UsersPage = () => {
   const { users, loading } = useFetchUsers();
-  
+
+   // Pagination state
+   const [currentPage, setCurrentPage] = useState(1);
+   const usersPerPage = 8; // Number of users per page
+ 
+   // Calculate pagination indexes
+   const totalPages = Math.ceil(users.length / usersPerPage);
+   const indexOfLastUser = currentPage * usersPerPage;
+   const indexOfFirstUser = indexOfLastUser - usersPerPage;
+   const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+
   const handleCopy = (id) => {
     navigator.clipboard.writeText(id).then(() => {
       toast.success("ID copied to clipboard!");
@@ -129,7 +139,13 @@ const UsersPage = () => {
         <div></div>
       ) : (
         <div className="bg-white shadow rounded-lg p-4 mt-4">
-          <DataTable columns={columns} data={users} />
+          <DataTable columns={columns} data={currentUsers} />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            totalItems={users.length}
+          />
         </div>
       )}
     </div>

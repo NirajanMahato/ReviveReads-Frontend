@@ -74,7 +74,6 @@ const EditProfile = ({ onClose }) => {
   };
 
   return (
-    <div className="md:w-1/4 w-full flex flex-col rounded-lg md:shadow p-6">
       <form onSubmit={handleSubmit}>
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">Edit Profile</h2>
@@ -170,7 +169,6 @@ const EditProfile = ({ onClose }) => {
           </button>
         </div>
       </form>
-    </div>
   );
 };
 

@@ -6,6 +6,7 @@ import { FaEye } from "react-icons/fa";
 import { LuSearch } from "react-icons/lu";
 import useBooks from "../../../hooks/useBooks";
 import DataTable from "../../../shared/DataTable/DataTable";
+import Pagination from "../../../shared/Pagination/Pagination";
 import BookDetailsModal from "../components/BookDetailModal";
 
 const BookListings = () => {
@@ -43,6 +44,16 @@ const BookListings = () => {
         return new Date(b.createdAt) - new Date(a.createdAt);
       return 0;
     });
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const booksPerPage = 5; // Number of books per page
+
+  // Calculate pagination indexes
+  const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
+  const indexOfLastBook = currentPage * booksPerPage;
+  const indexOfFirstBook = indexOfLastBook - booksPerPage;
+  const currentBooks = filteredBooks.slice(indexOfFirstBook, indexOfLastBook);
 
   // Function to handle status updates
   const handleStatusUpdate = async (bookId, status) => {
@@ -190,7 +201,7 @@ const BookListings = () => {
       {loading ? (
         <div>Loading...</div>
       ) : (
-        <div className="mt-6 bg-white rounded-lg shadow">
+        <div className="mt-6 bg-white pb-4 rounded-lg shadow">
           <div className="py-5 sm:p-6 flex items-center gap-4">
             <div className="rounded-md min-w-60 h-12 flex items-center justify-between py-2 px-3 border border-gray-300 bg-white">
               <input
@@ -247,7 +258,13 @@ const BookListings = () => {
           </div>
 
           <div className="pl-4">
-            <DataTable columns={columns} data={filteredBooks} />
+            <DataTable columns={columns} data={currentBooks} />
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              totalItems={allBooks.length}
+            />
           </div>
         </div>
       )}
