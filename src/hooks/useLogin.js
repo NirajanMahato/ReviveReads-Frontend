@@ -3,10 +3,13 @@ import { toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "../store/auth";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
 
 const useLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { refreshUserInfo } = useContext(UserContext);
 
   const login = async (data) => {
     try {
@@ -18,6 +21,9 @@ const useLogin = () => {
       localStorage.setItem("id", response.data.user.id);
       localStorage.setItem("token", response.data.user.token);
       localStorage.setItem("role", response.data.user.role);
+
+      // Refresh user info in context
+      refreshUserInfo();
 
       toast.success("Login successful!");
 

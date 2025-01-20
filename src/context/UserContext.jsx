@@ -1,55 +1,61 @@
 import axios from "axios";
 import React, { createContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { authActions } from "../store/auth"; // Assuming you're using Redux for authentication
+import { authActions } from "../store/auth";
 
-// Create the context
 export const UserContext = createContext();
 
-// Create the provider component
 export const UserProvider = ({ children }) => {
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  const dispatch = useDispatch(); // We need dispatch to call logout action
+  const [refresh, setRefresh] = useState(0); // Add refresh counter
+  const dispatch = useDispatch();
 
   // Access token and user ID from localStorage
-  const authenticateToken = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
   const userId = localStorage.getItem("id");
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      if (userId) {
+      if (userId && token) {
         try {
-          const response = await axios.get(
-            `/api/user/get-user-by-id/${userId}` // Adjust endpoint
-          );
+          const response = await axios.get(`/api/user/get-user-by-id/${userId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
           setUserInfo(response.data);
         } catch (error) {
           console.error("Error fetching user info:", error);
-        } finally {
-          setLoading(false);
+          if (error.response?.status === 401) {
+            logout();
+          }
         }
       } else {
-        setLoading(false);
+        setUserInfo(null);
       }
+      setLoading(false);
     };
 
     fetchUserInfo();
-  }, [userId, authenticateToken]);
+  }, [userId, token, refresh]); // Add refresh to dependency array
 
-  // Logout function to be used across components
   const logout = () => {
-    dispatch(authActions.logout()); // Clear auth state in Redux
+    dispatch(authActions.logout());
     localStorage.removeItem("id");
     localStorage.removeItem("token");
     localStorage.removeItem("role");
-    setUserInfo(null); // Clear the user info from context
-    window.location.reload(); // Optionally reload to reset the app state
+    setUserInfo(null);
+    window.location.href = "/";
+  };
+
+  // Add refreshUserInfo function
+  const refreshUserInfo = () => {
+    setRefresh(prev => prev + 1);
   };
 
   return (
-    <UserContext.Provider value={{ userInfo, setUserInfo, loading, logout }}>
+    <UserContext.Provider value={{ userInfo, setUserInfo, loading, logout, refreshUserInfo }}>
       {children}
     </UserContext.Provider>
   );

@@ -4,7 +4,7 @@ import { IoMdLock } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import { Link } from "react-router-dom";
 import * as yup from "yup";
-import useLogin from "../../../hooks/useLogin"; // Import the custom hook
+import useLogin from "../../../hooks/useLogin";
 import wallpaper from "/BG/wallpaper.jpg";
 import logo2 from "/Logos/Logo2.png";
 
@@ -103,7 +103,7 @@ const LoginPage = () => {
             )}
 
             <div className={"md:w-6/12 w-11/12 flex justify-end pt-3 pr-1"}>
-              <Link to={"/ForgetPassword"}>
+              <Link to={"/forgot-password"}>
                 <h3
                   className={
                     "text-gray-500 cursor-pointer transition-all hover:text-black"
