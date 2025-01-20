@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import io from "socket.io-client";
-import { UserContext } from "./UserContext";
 
 const NotificationContext = createContext();
 
@@ -43,18 +43,31 @@ export const NotificationProvider = ({ children }) => {
     if (userId) {
       fetchNotifications();
 
-      const socket = io("http://localhost:5000", {
-        query: { userId: userId },
+      // Socket connection
+      const socket = io("http://localhost:4000", {
+        query: { userId },
       });
 
+      // Listen for new notifications
       socket.on("newNotification", (notification) => {
         setNotifications((prev) => [notification, ...prev]);
         setUnreadCount((prev) => prev + 1);
+
+        // Show toast notification
+        toast(notification.message, {
+          duration: 4000,
+          style: {
+            background: "#333",
+            color: "#fff",
+          },
+        });
       });
 
-      return () => socket.disconnect();
+      return () => {
+        socket.disconnect();
+      };
     }
-  }, []);
+  }, [notifications]);
 
   return (
     <NotificationContext.Provider

@@ -113,22 +113,6 @@ const UsersPage = () => {
       header: "Created At",
       cell: (info) => new Date(info.getValue()).toLocaleDateString() || "N/A",
     }),
-
-    // Actions column
-    // columnHelper.display({
-    //   id: "actions",
-    //   header: "Actions",
-    //   cell: () => (
-    //     <div className="flex space-x-2">
-    //       <button className="text-blue-500 hover:text-blue-700 mr-3">
-    //         <FaEdit />
-    //       </button>
-    //       <button className="text-red-500 hover:text-red-700">
-    //         <FaTrash />
-    //       </button>
-    //     </div>
-    //   ),
-    // }),
   ];
 
   return (

@@ -1,8 +1,10 @@
 import { useContext, useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
+import { IoLogOutOutline } from "react-icons/io5"; // Import logout icon
 import BottomNavBar from "../../../components/BottomNavBar";
 import Navbar from "../../../components/Navbar";
 import { UserContext } from "../../../context/UserContext";
+import { useNavigate } from "react-router-dom";
 import AdPostsCard from "./AdPostsCard";
 import AnalyticsCard from "./AnalyticsCard";
 import EditProfile from "./EditProfile";
@@ -10,7 +12,8 @@ import SaveListsCard from "./SaveListsCard";
 import SoldCard from "./SoldCard";
 
 const UserProfile = () => {
-  const { userInfo, loading } = useContext(UserContext);
+  const { userInfo, logout } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const formatMemberSince = (dateString) => {
     const options = { year: "numeric", month: "short", day: "numeric" };
@@ -19,6 +22,11 @@ const UserProfile = () => {
 
   const [activeTab, setActiveTab] = useState("adPosts");
   const [isEditing, setIsEditing] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   const tabs = [
     {
@@ -32,11 +40,11 @@ const UserProfile = () => {
   ];
 
   const toggleEditProfile = () => {
-    setIsEditing(!isEditing); // Toggle between edit and view mode
+    setIsEditing(!isEditing);
   };
 
   const closeEditProfile = () => {
-    setIsEditing(false); // Close the edit view
+    setIsEditing(false);
   };
 
   return (
@@ -81,6 +89,15 @@ const UserProfile = () => {
               className="rounded-lg mt-4 bg-gray-800 w-full bg-custom text-white py-2 font-medium"
             >
               Edit Profile
+            </button>
+
+            {/* Logout Button - Only visible on mobile */}
+            <button
+              onClick={handleLogout}
+              className="md:hidden flex items-center justify-center gap-2 w-full mt-3 py-2 text-red-600 border border-red-600 rounded-lg hover:bg-red-50"
+            >
+              <IoLogOutOutline className="text-xl" />
+              <span>Logout</span>
             </button>
           </div>
         )}
