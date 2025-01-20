@@ -6,9 +6,9 @@ import { MdLocalShipping, MdOutlineBookmarkAdd } from "react-icons/md";
 import { RiMessage3Line } from "react-icons/ri";
 import { useNavigate, useParams } from "react-router-dom";
 import { handleChatNow, handleSaveBook } from "../../../hooks/bookActions";
-import map from "/BG/map.png";
 
 import Navbar from "../../../components/Navbar";
+import SimpleMap from "../../../components/SimpleMap";
 import useProductDetails from "../../../hooks/useProductDetails";
 import ChatModal from "../homePage/ChatModal";
 
@@ -207,18 +207,16 @@ const ProductDetails = () => {
 
           {activeTab === "location" && (
             <div className="md:p-6 rounded-lg border border-gray-200">
-              <div className="relative md:h-48 h-28 rounded-lg overflow-hidden cursor-pointer">
-                <img
-                  src={map}
-                  alt="Location Map"
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-10"></div>
-                <div className="absolute flex items-center bottom-4 left-4 bg-white px-3 py-1 rounded-full text-sm">
-                  <FaLocationDot className="mr-1" />
-                  {product?.seller?.address}
+              {product?.seller?.address ? (
+                <SimpleMap address={product.seller.address} />
+              ) : (
+                <div className="relative md:h-48 h-28 rounded-lg overflow-hidden bg-gray-100 flex flex-col items-center justify-center">
+                  <FaLocationDot className="text-2xl text-gray-400 mb-2" />
+                  <p className="text-sm text-gray-500">
+                    Location not specified
+                  </p>
                 </div>
-              </div>
+              )}
             </div>
           )}
         </div>

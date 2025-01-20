@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { LuSearch } from "react-icons/lu";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import NotificationDropdown from "../core/public/notifications/NotificationDropdown";
 import useApprovedBooks from "../hooks/useApprovedBooks";
@@ -12,9 +12,9 @@ const Navbar = () => {
   const { allBooks } = useApprovedBooks();
   const [search, setSearch] = useState("");
   const [isSearchBoxVisible, setIsSearchBoxVisible] = useState(false);
-
-  // Access user info from context
   const { userInfo, loading } = useContext(UserContext);
+  const navigate = useNavigate();
+
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
   };
@@ -22,6 +22,12 @@ const Navbar = () => {
   const filteredBooks = allBooks.filter((product) =>
     product.title.toLowerCase().includes(search.toLowerCase())
   );
+
+  const handleBookClick = (bookId) => {
+    setIsSearchBoxVisible(false);
+    setSearch('');
+    navigate(`/products/${bookId}`);
+  };
 
   return (
     <div className="relative w-full">
@@ -44,11 +50,7 @@ const Navbar = () => {
         </div>
         <div className="md:flex grow items-center justify-between lg:w-10/12">
           <div className="flex items-center justify-end w-full lg:pr-8 pr-2">
-            <div
-              className={
-                "lg:w-64 md:w-40 w-36 h-[39px] flex items-center justify-between rounded-lg px-2 bg-gray-200"
-              }
-            >
+            <div className={"lg:w-64 md:w-40 w-36 h-[39px] flex items-center justify-between rounded-lg px-2 bg-gray-200"}>
               <input
                 type={"search"}
                 placeholder={"Search Book"}
@@ -56,21 +58,15 @@ const Navbar = () => {
                 value={search}
                 onChange={handleSearchChange}
                 onFocus={() => setIsSearchBoxVisible(true)}
-                onBlur={() => setIsSearchBoxVisible(false)}
               />
-              <span
-                className={"animate-pulse text-xl text-gray-600 cursor-pointer"}
-              >
+              <span className={"animate-pulse text-xl text-gray-600 cursor-pointer"}>
                 <LuSearch />
               </span>
             </div>
           </div>
           <div className="md:flex hidden items-center">
-            {/* Notification Dropdown */}
             <NotificationDropdown />
             <span className="border-l-2 border-gray-400 rounded-full h-7 ml-2"></span>
-
-            {/* Conditionally render Sign Up or User Info */}
             {!loading && <UserMenu userInfo={userInfo} />}
           </div>
         </div>
@@ -78,20 +74,24 @@ const Navbar = () => {
 
       {/* Search suggestions box */}
       {isSearchBoxVisible && search && (
-        <div className="absolute top-full left-0 w-full bg-white shadow-lg z-50 rounded-b-lg">
+        <div 
+          className="absolute top-full left-0 w-full bg-white shadow-lg z-50 rounded-b-lg"
+          onMouseDown={(e) => e.preventDefault()} // Prevent onBlur when clicking inside suggestions
+        >
           <ul>
             {filteredBooks.map((book) => (
               <li
                 key={book._id}
                 className="px-4 py-2 hover:bg-gray-200 cursor-pointer font-gilroyMedium text-gray-700"
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleBookClick(book._id);
+                }}
               >
-                <Link
-                  to={`/products/${book._id}`}
-                  onClick={() => setIsSearchBoxVisible(false)}
-                  className="block w-full h-full"
-                >
+                <span className="block w-full h-full">
                   {book.title}
-                </Link>
+                </span>
               </li>
             ))}
           </ul>
