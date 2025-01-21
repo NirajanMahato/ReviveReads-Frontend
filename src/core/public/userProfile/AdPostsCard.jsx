@@ -14,7 +14,7 @@ import notAvailable from "/BG/notAvailable.svg";
 const AdPostsCard = ({ userId }) => {
   const [filteredProducts, setFilteredProducts] = useState([]); // Filtered products
   const [searchQuery, setSearchQuery] = useState(""); // Search input state
-  const { allBooks, loading } = useUserBooks(userId);
+  const { allBooks, loading, fetchBooks } = useUserBooks(userId);
 
   useEffect(() => {
     setFilteredProducts(allBooks);
@@ -78,13 +78,23 @@ const AdPostsCard = ({ userId }) => {
   };
 
   const [showModal, setShowModal] = useState(false);
+  const [selectedBook, setSelectedBook] = useState(null);
+
+  // Function to handle edit click
+  const handleEditClick = (book) => {
+    setSelectedBook(book);
+    setShowModal(true);
+  };
 
   const openModal = () => {
     setShowModal(true);
   };
 
-  const closeModal = () => {
+  const closeModal = async () => {
     setShowModal(false);
+    setSelectedBook(null); // Reset selected book
+    await fetchBooks(); // Refresh the books data
+    setFilteredProducts(allBooks);
   };
 
   return (
@@ -166,7 +176,10 @@ const AdPostsCard = ({ userId }) => {
                   </h1>
                 </div>
                 <div className="flex justify-between md:mt-3 mt-2 text-gray-600">
-                  <button className="flex items-center hover:text-green-700">
+                  <button
+                    onClick={() => handleEditClick(product)}
+                    className="flex items-center hover:text-green-700"
+                  >
                     <FaEdit className="md:text-lg" />
                     <h1 className="text-sm pl-1">Edit</h1>
                   </button>
@@ -210,7 +223,11 @@ const AdPostsCard = ({ userId }) => {
           </div>
         )}
       </div>
-      <AddBookModal showModal={showModal} closeModal={closeModal} />
+      <AddBookModal
+        showModal={showModal}
+        closeModal={closeModal}
+        editBook={selectedBook}
+      />
     </div>
   );
 };

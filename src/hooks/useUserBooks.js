@@ -25,7 +25,7 @@ const useUserBooks = (userId) => {
     fetchBooks();
   }, [userId]);
 
-  return { allBooks, loading };
+  return { allBooks, loading, fetchBooks };
 };
 
 export default useUserBooks;

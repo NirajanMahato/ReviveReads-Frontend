@@ -1,10 +1,10 @@
 import axios from "axios";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 
-const AddBookModal = ({ showModal, closeModal }) => {
+const AddBookModal = ({ showModal, closeModal, editBook = null }) => {
   const [formData, setFormData] = useState({
     title: "",
     genre: "",
@@ -14,6 +14,21 @@ const AddBookModal = ({ showModal, closeModal }) => {
     delivery: false,
     images: [],
   });
+
+  // Populate form data when editing
+  useEffect(() => {
+    if (editBook) {
+      setFormData({
+        title: editBook.title || "",
+        genre: editBook.genre || "",
+        description: editBook.description || "",
+        price: editBook.price || "",
+        condition: editBook.condition || "",
+        delivery: editBook.delivery || false,
+        images: [], // We'll handle existing images differently
+      });
+    }
+  }, [editBook]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,9 +40,7 @@ const AddBookModal = ({ showModal, closeModal }) => {
 
   const handleFileChange = (e) => {
     const files = e.target.files;
-
     if (files && files.length > 0) {
-      // Add new files to the existing images
       setFormData((prevData) => ({
         ...prevData,
         images: [...prevData.images, ...Array.from(files)],
@@ -35,7 +48,6 @@ const AddBookModal = ({ showModal, closeModal }) => {
     }
   };
 
-  // Remove selected image
   const removeImage = (index) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -50,36 +62,43 @@ const AddBookModal = ({ showModal, closeModal }) => {
     fileInputRef.current.click();
   };
 
-  // Access token and user ID from localStorage
-  const headers = {
-    id: localStorage.getItem("id"),
-    authorization: `Bearer ${localStorage.getItem("token")}`,
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const form = new FormData();
-    form.append("title", formData.title);
-    form.append("genre", formData.genre);
-    form.append("description", formData.description);
-    form.append("price", formData.price);
-    form.append("condition", formData.condition);
-    form.append("delivery", formData.delivery);
-    // Append all images
+
+    // Append all form fields
+    Object.keys(formData).forEach(key => {
+      if (key !== 'images') {
+        form.append(key, formData[key]);
+      }
+    });
+
+    // Append images
     formData.images.forEach((image) => {
       form.append("images", image);
     });
 
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    };
+
     try {
-      const response = await axios.post(
-        "/api/book/post-book",
-        form,
-        { headers }
-      );
-      console.log(response);
-      toast.success("Book posted successfully");
-      // **Reset the form fields**
+      let response;
+      if (editBook) {
+        // Update existing book
+        response = await axios.patch(
+          `/api/book/update-book/${editBook._id}`,
+          form,
+          { headers }
+        );
+        toast.success("Book updated successfully");
+      } else {
+        // Create new book
+        response = await axios.post("/api/book/post-book", form, { headers });
+        toast.success("Book posted successfully");
+      }
+
+      // Reset form and close modal
       setFormData({
         title: "",
         genre: "",
@@ -92,11 +111,9 @@ const AddBookModal = ({ showModal, closeModal }) => {
       closeModal();
     } catch (error) {
       console.error(error);
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
-
-  if (!showModal) return null;
 
   const genres = [
     "Arts & Photography",
@@ -109,11 +126,15 @@ const AddBookModal = ({ showModal, closeModal }) => {
     "Other",
   ];
 
+  if (!showModal) return null;
+
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 flex justify-center items-center z-50">
-      <div className="bg-white md:px-7 p-4 py-4 rounded-lg w-[650px] h-[600px]">
+      <div className="bg-white md:px-7 p-4 py-4 rounded-lg w-[650px] h-[620px] overflow-y-auto">
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold">Post Your Book</h2>
+          <h2 className="text-xl font-semibold">
+            {editBook ? "Edit Book" : "Post Your Book"}
+          </h2>
           <button
             onClick={closeModal}
             className="text-black font-bold text-2xl border w-8 h-8 rounded-full hover:bg-slate-200"
@@ -302,7 +323,7 @@ const AddBookModal = ({ showModal, closeModal }) => {
             type="submit"
             className="mt-4 w-full bg-gray-800 text-white py-2 rounded-md hover:bg-black transition duration-300"
           >
-            Post Book
+            {editBook ? "Update Book" : "Post Book"}
           </button>
         </form>
       </div>
