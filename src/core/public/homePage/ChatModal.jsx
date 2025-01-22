@@ -22,7 +22,7 @@ const ChatModal = ({ isOpen, onClose }) => {
             <div className="w-9 rounded-full">
               <img
                 alt="Tailwind CSS chat bubble component"
-                src={`/api/product_images/${selectedConversation.avatar}`}
+                src={`/api/uploads/users/${selectedConversation.avatar}`}
               />
             </div>
           </div>

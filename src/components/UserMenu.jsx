@@ -20,8 +20,8 @@ const UserMenu = () => {
               <img
                 src={
                   userInfo?.avatar
-                    ? `/api/product_images/${userInfo.avatar}`
-                    : "/api/product_images/default_avatar.png"
+                    ? `/api/uploads/users/${userInfo.avatar}`
+                    : "/api/uploads/users/default_avatar.png"
                 }
                 alt={userInfo.name}
               />

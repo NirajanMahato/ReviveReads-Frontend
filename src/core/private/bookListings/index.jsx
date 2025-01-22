@@ -132,7 +132,7 @@ const BookListings = () => {
             <div className="w-12 h-12 overflow-hidden rounded">
               <img
                 className="object-cover w-full h-full"
-                src={`/api/product_images/${book.images[0]}`}
+                src={`/api/uploads/books/${book.images[0]}`}
                 alt={`Image of ${book.title}`}
               />
             </div>

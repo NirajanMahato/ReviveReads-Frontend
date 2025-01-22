@@ -54,7 +54,7 @@ const SaveListsCard = () => {
         >
           <Link to={`/products/${product?._id}`}>
             <img
-              src={`/api/product_images/${product?.images[0]}`}
+              src={`/api/uploads/books/${product?.images[0]}`}
               alt={product.title}
               className="rounded-lg lg:w-36 md:w-40 w-32 md:h-44 h-36 object-cover"
             />

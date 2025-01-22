@@ -8,8 +8,8 @@ const Message = ({ message }) => {
   const fromMe = message.senderId === userInfo._id;
   const chatClassName = fromMe ? "chat-end" : "chat-start";
   const profilePic = fromMe
-    ? `/api/product_images/${userInfo.avatar}`
-    : `/api/product_images/${selectedConversation.avatar}`;
+    ? `/api/uploads/users/${userInfo.avatar}`
+    : `/api/uploads/users/${selectedConversation.avatar}`;
   const bubbleBgColor = fromMe ? "" : "bg-gray-300";
   const textColor = fromMe ? "text-gray-100" : "text-gray-900";
   const shakeClass = message.shouldShake ? "shake" : "";

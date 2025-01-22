@@ -34,7 +34,7 @@ const BookCard = ({ products }) => {
           {product?.seller?._id !== userId ? (
             <Link to={`/products/${product?._id}`} className="md:w-44 w-full">
               <img
-                src={`/api/product_images/${product?.images[0]}`}
+                src={`/api/uploads/books/${product?.images[0]}`}
                 alt={product.title}
                 className="w-full h-40 md:h-44 object-cover rounded-lg hover:scale-105 transition-all delay-75 hover:cursor-pointer"
               />
@@ -42,7 +42,7 @@ const BookCard = ({ products }) => {
           ) : (
             <div className="md:w-44 w-full">
               <img
-                src={`/api/product_images/${product?.images[0]}`}
+                src={`/api/uploads/books/${product?.images[0]}`}
                 alt={product.title}
                 className="w-full h-40 md:h-44 object-cover rounded-lg"
               />

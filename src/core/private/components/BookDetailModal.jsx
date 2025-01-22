@@ -53,7 +53,7 @@ const BookDetailsModal = ({ isOpen, onClose, book, onApprove, onDecline }) => {
                 <img
                   key={index}
                   className="h-32 w-32 object-cover rounded-lg shadow"
-                  src={`/api/product_images/${image}`}
+                  src={`/api/uploads/books/${image}`}
                   alt={`Image ${index + 1} of ${book.title}`}
                 />
               ))}
@@ -70,8 +70,8 @@ const BookDetailsModal = ({ isOpen, onClose, book, onApprove, onDecline }) => {
                   className="h-10 w-10 rounded-full object-cover shadow"
                   src={
                     book?.seller.avatar
-                      ? `/api/product_images/${book?.seller.avatar}`
-                      : "/api/product_images/default_avatar.png"
+                      ? `/api/uploads/users/${book?.seller.avatar}`
+                      : "/api/uploads/users/default_avatar.png"
                   }
                   alt="Seller profile"
                 />

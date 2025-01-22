@@ -55,7 +55,7 @@ const ProductDetails = () => {
         <div className="lg:w-1/3 md:w-1/2">
           <div className="flex justify-center rounded-lg pt-4 md:pb-8 pb-4">
             <img
-              src={`/api/product_images/${mainImage || product?.images[0]}`}
+              src={`/api/uploads/books/${mainImage || product?.images[0]}`}
               alt="book"
               className="rounded-lg object-cover md:w-80 w-44 md:h-96 h-56"
             />
@@ -64,7 +64,7 @@ const ProductDetails = () => {
             {product?.images.map((image, index) => (
               <img
                 key={index}
-                src={`/api/product_images/${image}`}
+                src={`/api/uploads/books/${image}`}
                 alt={`Book Image ${index + 1}`}
                 className={`rounded-lg object-cover md:w-16 w-10 md:h-16 h-10 cursor-pointer transition-transform ${
                   mainImage === image
@@ -99,8 +99,8 @@ const ProductDetails = () => {
                   className="h-12 w-12 rounded-full object-cover shadow"
                   src={
                     product?.seller.avatar
-                      ? `/api/product_images/${product?.seller.avatar}`
-                      : "/api/product_images/default_avatar.png"
+                      ? `/api/uploads/users/${product?.seller.avatar}`
+                      : "/api/uploads/users/default_avatar.png"
                   }
                   alt="Seller profile"
                 />

@@ -31,7 +31,7 @@ const MessageContainer = () => {
                 <div className="w-9 rounded-full">
                   <img
                     alt="User avatar"
-                    src={`/api/product_images/${selectedConversation.avatar}`}
+                    src={`/api/uploads/users/${selectedConversation.avatar}`}
                   />
                 </div>
               </div>

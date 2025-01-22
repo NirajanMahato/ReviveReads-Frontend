@@ -25,7 +25,7 @@ const AddBookModal = ({ showModal, closeModal, editBook = null }) => {
         price: editBook.price || "",
         condition: editBook.condition || "",
         delivery: editBook.delivery || false,
-        images: [], // We'll handle existing images differently
+        images: [],
       });
     }
   }, [editBook]);
@@ -55,10 +55,9 @@ const AddBookModal = ({ showModal, closeModal, editBook = null }) => {
     }));
   };
 
-  // Create a reference for the file input
+  // Reference for the file input
   const fileInputRef = useRef(null);
   const handleButtonClick = () => {
-    // Handle button click to trigger file input
     fileInputRef.current.click();
   };
 

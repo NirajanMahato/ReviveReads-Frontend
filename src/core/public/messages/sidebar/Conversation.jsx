@@ -19,7 +19,7 @@ const Conversation = ({ conversation, lastIdx }) => {
         <div className={`avatar ${isOnline ? "online" : ""}`}>
           <div className="w-9 rounded-full">
             <img
-              src={`/api/product_images/${conversation.avatar}`}
+              src={`/api/uploads/users/${conversation.avatar}`}
               alt="user avatar"
             />
           </div>

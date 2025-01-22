@@ -56,7 +56,7 @@ const UsersPage = () => {
         return (
           <div className="flex items-center">
             <img
-              src={`/api/product_images/${user.avatar}`}
+              src={`/api/uploads/users/${user.avatar}`}
               alt={user.name}
               className="w-8 h-8 rounded-full object-cover"
             />
