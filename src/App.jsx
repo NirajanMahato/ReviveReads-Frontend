@@ -2,13 +2,14 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
 import LoadingScreen from "./components/LoadingScreen";
+import { AdminRoute } from "./components/routes/AdminRoute";
+import { ProtectedRoute } from "./components/routes/ProtectedRoute";
+import { PublicRoute } from "./components/routes/PublicRoute";
 import { NotificationProvider } from "./context/NotificationContext";
 import { SocketContextProvider } from "./context/SocketContext";
 import { UserProvider } from "./context/UserContext";
+import useUpdateUserStatus from "./hooks/useUpdateUserStatus";
 import { authActions } from "./store/auth";
-import { PublicRoute } from "./components/routes/PublicRoute";
-import { ProtectedRoute } from "./components/routes/ProtectedRoute";
-import { AdminRoute } from "./components/routes/AdminRoute";
 
 // Lazy-loaded components (keeping your existing imports)
 const Home = lazy(() => import("./core/public/homePage/Home"));
@@ -37,6 +38,7 @@ const Settings = lazy(() => import("./core/private/settings"));
 function App() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
+  useUpdateUserStatus();
 
   useEffect(() => {
     if (
