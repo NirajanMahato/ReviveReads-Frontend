@@ -1,21 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
 import { IoClose } from "react-icons/io5";
+import { useSocketContext } from "../../../context/SocketContext";
+import useConversation from "../../../zustand/useConverstaion";
 import MessageInput from "../messages/MessageInput";
 import Messages from "../messages/Messages";
-import useConversation from "../../../zustand/useConverstaion";
-import { useSocketContext } from "../../../context/SocketContext";
 
 const ChatModal = ({ isOpen, onClose }) => {
-
   if (!isOpen) return null; // Hide modal if not open
   const { selectedConversation } = useConversation();
 
-    const { onlineUsers } = useSocketContext();
-    const isOnline = onlineUsers.includes(selectedConversation._id);
-
+  const { onlineUsers } = useSocketContext();
+  const isOnline = onlineUsers.includes(selectedConversation._id);
 
   return (
-    <div className="fixed bottom-4 right-4 w-80 h-96 bg-white shadow-lg border rounded-lg z-50">
+    <div className="fixed md:bottom-4 bottom-16 md:right-4 right-6 w-80 h-96 bg-white shadow-lg border rounded-lg z-51">
       <div className="flex justify-between items-center px-3 py-2 border-b bg-gray-100">
         <div className="flex items-center gap-2">
           <div className={`avatar ${isOnline ? "online" : ""}`}>
